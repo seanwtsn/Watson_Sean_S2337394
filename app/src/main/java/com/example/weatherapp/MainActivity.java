@@ -105,54 +105,57 @@ public class MainActivity extends AppCompatActivity {
         }
 
         private void parseThreeDayXML(){
-            ArrayList<BasicWeather> weather = new ArrayList<BasicWeather>();
+            ArrayList<BasicWeather> weather = new ArrayList<>(3);
             Log.d("Testing", "parseThreeDayXML run ");
             try
             {
                 XmlPullParserFactory parserFactory = XmlPullParserFactory.newInstance();
                 parserFactory.setNamespaceAware(false);
                 XmlPullParser pullParser = parserFactory.newPullParser();
-
-
+                float maxTemp;
+                float minTemp;
+                String windDir = "";
+                float windSpeed;
+                String locName= "";
+                String day = null;
                 pullParser.setInput(new StringReader(result));
                 int eventType = pullParser.getEventType();
                 while(eventType != XmlPullParser.END_DOCUMENT)
                 {
-
-                    float maxTemp;
-                    float minTemp;
-                    String windDir = "";
-                    float windSpeed;
-                    String locName= "";
-                    String day = null;
-
-
-
                     if(eventType == pullParser.START_TAG) {
-
                         //TODO: Implement all the tags in the 3 Day, and create separate conditions depending on what we need.
                         String temp;
                         switch (pullParser.getName())
                         {
                             case "title":
                                 temp = pullParser.nextText();
-
+                                Log.d("Testing", "parseThreeDayXML: title called");
                                 if(temp != null && temp.contains("Minimum"))
                                 {
+                                    Log.d("Testing", "parseThreeDayXML: minimum condition called");
+
                                     String[] titleSplit = temp.split(":");
 
                                     if(!titleSplit[0].trim().equalsIgnoreCase("today"))
                                     {
+                                        Log.d("Testing", "parseThreeDayXML: day condition called");
+
                                         day = titleSplit[0].trim().toUpperCase();
                                     }
                                 }
                                 else if (temp != null && temp.contains("BBC"))
                                 {
+                                    Log.d("Testing", "parseThreeDayXML: location condition called");
+
                                     String[] locSplit = temp.split("-");
-                                    locName = locSplit[1].split(" ")[2];
+                                    locName = locSplit[1].split(" ")[4];
                                 }
-                                case "description":
+                            break;
+
+                            case "description":
                                 temp = pullParser.nextText();
+                                Log.d("Testing", "parseThreeDayXML: description called");
+                                Log.d("Testing", temp);
                                 if(temp != null && temp.contains("Maximum"))
                                 {
                                     String[] strSplit = temp.split(",");
@@ -165,11 +168,17 @@ public class MainActivity extends AppCompatActivity {
                                     Log.d("Testing", windDir);
                                     Log.d("Testing", Float.toString(windSpeed));
 
-                                    weather.add(new BasicWeather(locName, null, maxTemp, minTemp, windSpeed, windDir, DayOfWeek.valueOf(day)));
-
+                                    if(day == null || day.equalsIgnoreCase("today"))
+                                    {
+                                        weather.add(new BasicWeather(locName, null, maxTemp, minTemp, windSpeed, windDir, null));
+                                    }
+                                    else
+                                    {
+                                        weather.add(new BasicWeather(locName, null, maxTemp, minTemp, windSpeed, windDir, DayOfWeek.valueOf(day)));
+                                    }
 
                                 }
-                                break;
+                            break;
                         }
 
                     }
