@@ -23,12 +23,17 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.time.DayOfWeek;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
-    private String urlSource = "https://weather-broker-cdn.api.bbci.co.uk/en/forecast/rss/3day/2643123";
+    private final String urlSource = "https://weather-broker-cdn.api.bbci.co.uk/en/forecast/rss/3day/2643123";
     private String result;
     private ArrayList<ExtendedWeather> threeDayWeather;
 
@@ -57,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
     private class Task implements Runnable{
 
-        private String url;
+        private final String url;
 
         public Task(String aurl){
             url = aurl;
@@ -100,11 +105,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         private void parseThreeDayXML(){
-            BasicWeather weather = null;
+            ArrayList<BasicWeather> weather = new ArrayList<BasicWeather>();
             Log.d("Testing", "parseThreeDayXML run ");
             try
             {
-                Log.d("Testing", "Try Statement");
                 XmlPullParserFactory parserFactory = XmlPullParserFactory.newInstance();
                 parserFactory.setNamespaceAware(false);
                 XmlPullParser pullParser = parserFactory.newPullParser();
@@ -117,70 +121,87 @@ public class MainActivity extends AppCompatActivity {
 
                     float maxTemp;
                     float minTemp;
-                    String windDir;
-                    String windSpeed;
-                    String locName;
+                    String windDir = "";
+                    float windSpeed;
+                    String locName= "";
+                    String day = null;
+
+
+
                     if(eventType == pullParser.START_TAG) {
 
                         //TODO: Implement all the tags in the 3 Day, and create separate conditions depending on what we need.
-
+                        String temp;
                         switch (pullParser.getName())
                         {
                             case "title":
-                            break;
-                            case "description":
-                                String temp = pullParser.nextText();
+                                temp = pullParser.nextText();
 
+                                if(temp != null && temp.contains("Minimum"))
+                                {
+                                    String[] titleSplit = temp.split(":");
+
+                                    if(!titleSplit[0].trim().equalsIgnoreCase("today"))
+                                    {
+                                        day = titleSplit[0].trim().toUpperCase();
+                                    }
+                                }
+                                else if (temp != null && temp.contains("BBC"))
+                                {
+                                    String[] locSplit = temp.split("-");
+                                    locName = locSplit[1].split(" ")[2];
+                                }
+                                case "description":
+                                temp = pullParser.nextText();
                                 if(temp != null && temp.contains("Maximum"))
                                 {
                                     String[] strSplit = temp.split(",");
-                                    for(int i = 0; i < strSplit.length; i++){
-                                        Log.d("Parser", strSplit[i]);
-                                    }
+                                    maxTemp = valueFromString(strSplit[0]);
+                                    minTemp = valueFromString(strSplit[1]);
+                                    windDir = strSplit[2].split(":")[1].trim();
+                                    windSpeed = Float.parseFloat(strSplit[3].split(":")[1].replace("mph", "").trim()); //I legitimately lost passion for life writing this
+                                    Log.d("Testing", Float.toString(maxTemp));
+                                    Log.d("Testing", Float.toString(minTemp));
+                                    Log.d("Testing", windDir);
+                                    Log.d("Testing", Float.toString(windSpeed));
+
+                                    weather.add(new BasicWeather(locName, null, maxTemp, minTemp, windSpeed, windDir, DayOfWeek.valueOf(day)));
+
+
                                 }
-                            break;
+                                break;
                         }
 
-
-
-
-                        if (pullParser.getName().equalsIgnoreCase("description"))
-                        {
-                            String temp = pullParser.nextText();
-
-                            if(temp != null && temp.contains("Maximum"))
-                            {
-                                String[] strSplit = temp.split(",");
-                                for(int i = 0; i < strSplit.length; i++){
-                                    Log.d("Parser", strSplit[i]);
-                                }
-                            }
-                        }
-
-                                /*
-                                maxTemp = Float.parseFloat(strSplit[0].split(":")[1]);
-                                minTemp = Float.parseFloat(strSplit[1].split(":")[1]);
-                                windDir = strSplit[2].split(":")[1];
-                                windSpeed = strSplit[3].split(":")[1];
-                                Log.d("Testing", Float.toString(maxTemp));
-                                Log.d("Testing", Float.toString(minTemp));
-                                Log.d("Testing", windDir);
-                                Log.d("Testing", windSpeed);
-                                */
                     }
                     eventType = pullParser.next();
                 }
 
             }
-            catch (XmlPullParserException ignore){
+            catch (XmlPullParserException ignore)
+            {
 
 
-            } catch (IOException e) {
+            }
+            catch (IOException e)
+            {
                 throw new RuntimeException(e);
             }
         }
 
     }
 
+    private float valueFromString(String s){
+
+        Pattern pattern = Pattern.compile("\\d+\\.?\\d*°C");
+        Matcher matcher = pattern.matcher(s);
+        if(matcher.find())
+        {
+          String temp = matcher.group().replace("°C", "");
+          return Float.parseFloat(temp);
+        }
+
+
+        return Float.NaN;
+    }
 
 }

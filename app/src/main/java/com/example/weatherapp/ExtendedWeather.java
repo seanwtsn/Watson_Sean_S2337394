@@ -1,20 +1,22 @@
 package com.example.weatherapp;
 
 import com.google.android.gms.maps.model.LatLng;
+
+import java.time.DayOfWeek;
 import java.time.LocalTime;
 
 public class ExtendedWeather extends BasicWeather {
     private float currentTemperature;
     private float[] laterTemperatures;
-    private int day;
+    private DayOfWeek day;
     private String visibility;
     private float pressure;
     private float humidity;
     private int uvRisk;
     private LocalTime sunrise;
     private LocalTime sunset;
-    public ExtendedWeather(String locationName, LatLng latLng, float currentTemperature, float[] laterTemperatures, int day, float highTemperature, float lowTemperature, float windSpeed, String windDirection, String visibility, float pressure, float humidity, int uvRisk, LocalTime sunrise, LocalTime sunset) {
-        super(locationName, latLng, highTemperature, lowTemperature, windSpeed, windDirection);
+    public ExtendedWeather(String locationName, LatLng latLng, float currentTemperature, float[] laterTemperatures, DayOfWeek day, float highTemperature, float lowTemperature, float windSpeed, String windDirection, String visibility, float pressure, float humidity, int uvRisk, LocalTime sunrise, LocalTime sunset) {
+        super(locationName, latLng, highTemperature, lowTemperature, windSpeed, windDirection, day);
         this.currentTemperature = currentTemperature;
         this.laterTemperatures = laterTemperatures;
         this.day = day;
@@ -47,11 +49,11 @@ public class ExtendedWeather extends BasicWeather {
 
 
 
-    public int getDay() {
+    public DayOfWeek getDay() {
         return day;
     }
 
-    public void setDay(int day) {
+    public void setDay(DayOfWeek day) {
         this.day = day;
     }
 
