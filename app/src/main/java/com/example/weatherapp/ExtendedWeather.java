@@ -1,20 +1,28 @@
 package com.example.weatherapp;
 
+import androidx.annotation.Nullable;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 
 public class ExtendedWeather extends BasicWeather {
-    private float currentTemperature;
+
+    //Had to set some of these to nullable because stupidly
+    //The one day weather misses out a lot of detail that is
+    //present in the 3-day, so ill likely just grab it from index 0.
+    //of the 3-day arraylist.
+
+    @Nullable private float currentTemperature;
     private float[] laterTemperatures;
     private DayOfWeek day;
     private String visibility;
     private float pressure;
     private float humidity;
-    private int uvRisk;
-    private LocalTime sunrise;
-    private LocalTime sunset;
+    @Nullable private int uvRisk;
+    @Nullable private LocalTime sunrise;
+    @Nullable private LocalTime sunset;
     public ExtendedWeather(String locationName, LatLng latLng, float currentTemperature, float[] laterTemperatures, DayOfWeek day, float highTemperature, float lowTemperature, float windSpeed, String windDirection, String visibility, float pressure, float humidity, int uvRisk, LocalTime sunrise, LocalTime sunset) {
         super(locationName, latLng, highTemperature, lowTemperature, windSpeed, windDirection, day);
         this.currentTemperature = currentTemperature;
