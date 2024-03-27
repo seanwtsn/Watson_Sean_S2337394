@@ -5,12 +5,12 @@ import androidx.lifecycle.ViewModel;
 
 public class MainViewModel extends ViewModel {
 
-    private MainModel model = new MainModel();
+    private MainModel model;
     private MutableLiveData<Boolean> hasParsedRecent;
 
     public MainViewModel()
     {
-
+        model = new MainModel();
     }
 
     public MutableLiveData<Boolean> getHasParsedRecent() {
@@ -33,13 +33,12 @@ public class MainViewModel extends ViewModel {
 
     public ExtendedWeather getOneDaySimple()
     {
-        if(model.returnOneDayWeather() == null)
-        {
-            model.startOneDayParse();
-            model.startThreeDayParse();
-        }
+        return model.returnOneDayWeatherSimple();
+    }
 
-        return model.returnOneDayWeather();
+    public ExtendedWeather getOneDayExtended()
+    {
+        return model.returnOneDayWeatherExtended();
     }
 
 }

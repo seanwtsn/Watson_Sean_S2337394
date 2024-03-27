@@ -23,13 +23,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
         setContentView(R.layout.activity_main);
-        fragmentContainerView = (FragmentContainerView) findViewById(R.id.fragmentContainerView);
+        fragmentContainerView = binding.fragmentContainerView;
         setFragmentContainerView(new OneDayFragment());
     }
 
     public void onStart() {
         super.onStart();
-        setFragmentContainerView(new OneDayFragment());
+
 
     }
     private void setFragmentContainerView(Fragment fragment)

@@ -25,21 +25,31 @@ import java.util.regex.Pattern;
 public class MainModel {
     public MainModel()
     {
-
+        startOneDayParse();
+        startThreeDayParse();
     }
     private final String urlThreeDaySource = "https://weather-broker-cdn.api.bbci.co.uk/en/forecast/rss/3day/2643123";
     private final String urlOneDaySource = "https://weather-broker-cdn.api.bbci.co.uk/en/observation/rss/2643123";
     private String result;
     private ArrayList<BasicWeather> threeDayWeather;
     private ExtendedWeather oneDayWeather;
+    private ExtendedWeather OneDayWeatherExtended;
     private OneDayData oneDayData;
     public ArrayList<BasicWeather> returnThreeDayWeather() {
         return threeDayWeather;
     }
-    public ExtendedWeather returnOneDayWeather() { return oneDayWeather; }
+    public ExtendedWeather returnOneDayWeatherSimple()
+    {
+        return oneDayWeather;
+    }
+
+    public ExtendedWeather returnOneDayWeatherExtended()
+    {
+        return OneDayWeatherExtended;
+    }
     public void startThreeDayParse()
     {
-        new Thread(new GetThreeDayTask(urlThreeDaySource)).start();
+        //new Thread(new GetThreeDayTask(urlThreeDaySource)).start();
     }
     public void startOneDayParse()
     {
@@ -82,16 +92,30 @@ public class MainModel {
         }
     }
 
-    private void createDetailedOneDay()
+    private ExtendedWeather createDetailedOneDay()
     {
-        oneDayWeather.setUvRisk(oneDayData.getUvRisk());
-        oneDayWeather.setHighTemperature(oneDayData.getMaxTemperature());
-        oneDayWeather.setLowTemperature(oneDayData.getMinTemperature());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        if(oneDayWeather != null)
         {
-            oneDayWeather.setSunrise(oneDayData.getSunrise());
-            oneDayWeather.setSunset(oneDayData.getSunset());
+            OneDayWeatherExtended = oneDayWeather;
+
+            OneDayWeatherExtended.setUvRisk(oneDayData.getUvRisk());
+            OneDayWeatherExtended.setHighTemperature(oneDayData.getMaxTemperature());
+            OneDayWeatherExtended.setLowTemperature(oneDayData.getMinTemperature());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            {
+                OneDayWeatherExtended.setSunrise(oneDayData.getSunrise());
+                OneDayWeatherExtended.setSunset(oneDayData.getSunset());
+            }
+
+            return OneDayWeatherExtended;
         }
+        else
+        {
+            Log.d("ERROR", "oneDayData = Null");
+        }
+
+        return null;
+
     }
 
     private class GetOneDayTask implements Runnable
@@ -125,8 +149,7 @@ public class MainModel {
             }
             int i = result.indexOf(">");
             result = result.substring(i+1);
-            i = result.indexOf(">");
-            result = result.substring(i+1);
+
 
             Log.d("Testing", result);
 
@@ -148,54 +171,79 @@ public class MainModel {
 
                 pullParser.setInput(new StringReader(result));
                 int eventType = pullParser.getEventType();
-                while(eventType != XmlPullParser.END_DOCUMENT)
-                {
+                while(eventType != XmlPullParser.END_DOCUMENT) {
+
                     if(eventType == XmlPullParser.START_TAG)
                     {
                         String temp;
                         switch(pullParser.getName())
                         {
                             case "title":
-                                temp = pullParser.nextText();
-                                if(temp.contains("GMT"))
+                                eventType = pullParser.next();
+                                if(eventType == XmlPullParser.TEXT)
                                 {
-                                    String[] titleSplit = temp.split(":", 1);
-                                    day = DayOfWeek.valueOf(titleSplit[0].split("-")[0]);
+                                    temp = pullParser.getText();
+                                    if(temp.contains("GMT"))
+                                    {
+                                        String[] titleSplit = temp.split(":", 1);
+                                        day = DayOfWeek.valueOf(titleSplit[0].split("-")[0].trim().toUpperCase());
+                                    }
                                 }
+                                break;
                                 case "description":
-                                temp = pullParser.nextText();
-                                if(temp.contains("Direction"))
+                                eventType = pullParser.next();
+                                if(eventType == XmlPullParser.TEXT)
                                 {
-                                    String[] desSplit = temp.split(",");
-                                    currentTemperature = valueFromString(desSplit[0].split(":")[1]);
-                                    windDir = desSplit[1].split(":")[1].trim();
-                                    windSpeed = Float.parseFloat(desSplit[2].split(":")[1].replace("mph", "").trim()); //Really don't want to know the performance overhead on this.
-                                    humidity = Float.parseFloat(desSplit[3].split(":")[1].replace("%", "").trim()); //There it is again
-                                    pressure = Float.parseFloat(desSplit[4].split(":")[1].replace("mb", "").trim()); //There it is again
-                                    visibility = desSplit[6].split(":")[1]; //Evidently, this can produce garbage, so probably should handle it.
+                                    temp = pullParser.getText();
+                                    if(temp.contains("Direction"))
+                                    {
+                                        String[] desSplit = temp.split(",");
 
+                                        for (int i = 0; i < desSplit.length; i++)
+                                        {
+                                            Log.d("LOOP", desSplit[i] + " " + i);
+                                        }
+
+
+
+                                        currentTemperature = valueFromString(desSplit[0].split(":")[1]);
+                                        windDir =  desSplit[1].split(":")[1].trim();
+
+                                        windSpeed = Float.parseFloat(desSplit[2].split(":")[1].replace("mph", "").trim()); //Really don't want to know the performance overhead on this.
+                                        pressure = Float.parseFloat(desSplit[4].split(":")[1].replace("mb", "").trim()); //There it is again
+                                        humidity = Float.parseFloat(desSplit[3].split(":")[1].replace("%", "").trim()); //There it is again
+                                        visibility = desSplit[6].split(":")[1]; //Evidently, this can produce garbage, so probably should handle it.
+
+                                    }
+                                    //I hate this.
+
+
+                                    Log.d("1D Test", locName);
+                                    Log.d("1D Test", Float.toString(currentTemperature));
+                                    Log.d("1D Test", Float.toString(highTemperature));
+                                    Log.d("1D Test", Float.toString(lowTemperature));
+                                    Log.d("1D Test", Float.toString(windSpeed));
+                                    Log.d("1D Test", Float.toString(pressure));
+                                    Log.d("1D Test", Float.toString(humidity));
+                                    Log.d("1D Test", Integer.toString(uvRisk));
                                 }
-                                //I hate this.
-                                oneDayWeather = new ExtendedWeather(locName, null, currentTemperature,
-                                        null, day, highTemperature, lowTemperature, windSpeed, windDir,
-                                        visibility, pressure, humidity, uvRisk, null, null);
 
-                                Log.d("1D Test", locName);
-                                Log.d("1D Test", Float.toString(currentTemperature));
-                                Log.d("1D Test", Float.toString(highTemperature));
-                                Log.d("1D Test", Float.toString(lowTemperature));
-                                Log.d("1D Test", Float.toString(windSpeed));
-                                Log.d("1D Test", Float.toString(pressure));
-                                Log.d("1D Test", Float.toString(humidity));
-                                Log.d("1D Test", Integer.toString(uvRisk));
                                 break;
 
                         }
 
                     }
+                    else if (eventType == XmlPullParser.END_TAG)
+                    {
+                        Log.d("TEST", pullParser.getName());
+                    }
+
                     eventType = pullParser.next();
                 }
 
+                oneDayWeather = new ExtendedWeather(locName, null, currentTemperature,
+                        null, day, highTemperature, lowTemperature, windSpeed, windDir,
+                        visibility, pressure, humidity, uvRisk, null, null);
             }
             catch (XmlPullParserException | IOException e)
             {
@@ -219,6 +267,15 @@ public class MainModel {
             return Float.NaN;
         }
 
+        private String safeNextText(XmlPullParser parser)
+                throws XmlPullParserException, IOException {
+            String result = parser.nextText();
+            if (parser.getEventType() != XmlPullParser.END_TAG) {
+                parser.nextTag();
+            }
+            return result;
+        }
+
     }
     private class GetThreeDayTask implements Runnable
     {
@@ -235,7 +292,7 @@ public class MainModel {
             URLConnection _url;
             BufferedReader in = null;
             String inputLine = "";
-            Log.d("Testing", "3day run() called");
+
             try
             {
                 aurl = new URL(url);
@@ -252,10 +309,9 @@ public class MainModel {
             }
             int i = result.indexOf(">");
             result = result.substring(i+1);
-            i = result.indexOf(">");
-            result = result.substring(i+1);
 
-            Log.d("Testing", result);
+
+
 
             parseThreeDayXML();
 
@@ -264,11 +320,11 @@ public class MainModel {
 
         private void parseThreeDayXML(){
             ArrayList<BasicWeather> weather = new ArrayList<>(3);
-            Log.d("Testing", "parseThreeDayXML run ");
+
             try
             {
                 XmlPullParserFactory parserFactory = XmlPullParserFactory.newInstance();
-                parserFactory.setNamespaceAware(false);
+                parserFactory.setNamespaceAware(true);
                 XmlPullParser pullParser = parserFactory.newPullParser();
 
                 float maxTemp, minTemp, windSpeed;
@@ -285,25 +341,21 @@ public class MainModel {
                         {
                             case "title":
                                 temp = pullParser.nextText();
-                                Log.d("Testing", "parseThreeDayXML: title called");
+
                                 if(temp != null && temp.contains("Minimum"))
                                 {
-                                    Log.d("Testing", "parseThreeDayXML: minimum condition called");
-
                                     String[] titleSplit = temp.split(":");
-
-                                    Log.d("Testing", titleSplit[0]);
-
                                     if(!titleSplit[0].trim().equalsIgnoreCase("today"))
                                     {
-                                        Log.d("Testing", "parseThreeDayXML: day condition called");
-
                                         day = titleSplit[0].trim().toUpperCase();
+                                    }
+                                    else
+                                    {
+                                        day = null;
                                     }
                                 }
                                 else if (temp != null && temp.contains("BBC"))
                                 {
-                                    Log.d("Testing", "parseThreeDayXML: location condition called");
 
                                     String[] locSplit = temp.split("-");
                                     locName = locSplit[1].split(" ")[4];
@@ -312,8 +364,7 @@ public class MainModel {
 
                             case "description":
                                 temp = pullParser.nextText();
-                                Log.d("Testing", "parseThreeDayXML: description called");
-                                Log.d("Testing", temp);
+
                                 if(temp != null && temp.contains("Maximum"))
                                 {
                                     String[] strSplit = temp.split(",");
@@ -322,8 +373,12 @@ public class MainModel {
                                     windDir = strSplit[2].split(":")[1].trim();
                                     windSpeed = Float.parseFloat(strSplit[3].split(":")[1].replace("mph", "").trim()); //I legitimately lost passion for life writing this
 
-                                    if(day == null || day.equalsIgnoreCase("tonight"))
+
+
+                                    if(day == null || day.isEmpty() || day.equalsIgnoreCase("tonight") || day.equalsIgnoreCase("today"))
                                     {
+
+
                                         int uvRisk;
                                         LocalTime sunrise = null, sunset = null;
                                         float maxTemperature, minTemperature;
@@ -331,21 +386,23 @@ public class MainModel {
                                         maxTemperature = maxTemp;
                                         minTemperature = minTemp;
 
-                                        uvRisk = Integer.parseInt(strSplit[7].split(":")[1]);
+                                        uvRisk = Integer.parseInt(strSplit[7].split(":")[1].trim());
                                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
                                         {
-                                            sunrise = LocalTime.parse(strSplit[9].split(":")[1]);
-                                            sunset = LocalTime.parse(strSplit[10].split(":")[1]);
 
+
+
+                                            sunrise = LocalTime.parse(strSplit[9].substring(10,15).trim());
+                                            sunset = LocalTime.parse(strSplit[10].substring(9,14).trim());
                                         }
 
                                         weather.add(new BasicWeather(locName, null, maxTemp, minTemp, windSpeed, windDir, null));
                                         oneDayData = new OneDayData(uvRisk, sunrise, sunset, maxTemperature, minTemperature);
                                         createDetailedOneDay();
-
                                     }
                                     else
                                     {
+
                                         weather.add(new BasicWeather(locName, null, maxTemp, minTemp, windSpeed, windDir, DayOfWeek.valueOf(day.toUpperCase())));
                                     }
 
@@ -354,7 +411,9 @@ public class MainModel {
                         }
 
                     }
+
                     eventType = pullParser.next();
+
                 }
 
                 threeDayWeather = weather;
@@ -367,9 +426,9 @@ public class MainModel {
                 correctFirstDate();
 
             }
-            catch (XmlPullParserException ignore)
+            catch (XmlPullParserException e)
             {
-
+                e.printStackTrace();
 
             }
             catch (IOException e)
@@ -384,8 +443,10 @@ public class MainModel {
     {
         if(threeDayWeather.get(1) != null)
         {
+            Log.d("Condition Testing", "correctFirstDate: called");
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 assert threeDayWeather.get(1).getDay() != null;
+                Log.d("Condition Testing", "correctFirstDate: Build.Version Called");
                 threeDayWeather.get(0).setDay(threeDayWeather.get(1).getDay().minus(1));
             }
         }
