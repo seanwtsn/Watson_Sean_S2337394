@@ -31,14 +31,11 @@ public class MainViewModel extends ViewModel {
 
     }
 
-    public ExtendedWeather getOneDaySimple()
+    public ExtendedWeather getOneDayForecast()
     {
-        return model.returnOneDayWeatherSimple();
+        return model.getOneDayExtended();
     }
 
-    public ExtendedWeather getOneDayExtended()
-    {
-        return model.returnOneDayWeatherExtended();
-    }
+
 
 }

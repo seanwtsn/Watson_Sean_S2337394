@@ -42,7 +42,7 @@ public class OneDayFragment extends Fragment {
     {
         View view = inflater.inflate(R.layout.fragment_one_day, container, false);
         statusView = view.findViewById(R.id.one_day_text_status);
-        currentWeather = mainModel.getOneDayExtended();
+        currentWeather = mainModel.getOneDayForecast();
         updateWeather();
         // Inflate the layout for this fragment
         return view;
@@ -57,7 +57,6 @@ public class OneDayFragment extends Fragment {
     @Override
     public void onResume()
     {
-
         super.onResume();
     }
 

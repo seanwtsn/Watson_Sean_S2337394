@@ -25,7 +25,7 @@ public class ThreeDaySmallFragment extends Fragment {
 
 
 
-        mainViewModel.getOneDaySimple();
+        //mainViewModel.getOneDaySimple();
 
         //dayView = new ArrayList<>();
 
