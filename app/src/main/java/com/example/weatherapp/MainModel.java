@@ -25,8 +25,7 @@ import java.util.regex.Pattern;
 public class MainModel {
     public MainModel()
     {
-        startOneDayParse();
-        startThreeDayParse();
+        getWeather();
     }
     private final String urlThreeDaySource = "https://weather-broker-cdn.api.bbci.co.uk/en/forecast/rss/3day/2643123";
     private final String urlOneDaySource = "https://weather-broker-cdn.api.bbci.co.uk/en/observation/rss/2643123";
@@ -49,13 +48,29 @@ public class MainModel {
     }
     public void startThreeDayParse()
     {
-        //new Thread(new GetThreeDayTask(urlThreeDaySource)).start();
+        new Thread(new GetThreeDayTask(urlThreeDaySource)).start();
     }
     public void startOneDayParse()
     {
         new Thread(new GetOneDayTask(urlOneDaySource)).start();
     }
 
+    public void getWeather()
+    {
+        Thread oneDayThread = new Thread(new GetOneDayTask(urlOneDaySource));
+
+        Thread threeDayThread = new Thread(new GetThreeDayTask(urlThreeDaySource));
+
+        oneDayThread.start();
+
+
+        if(isOneDayParsed)
+        {
+            threeDayThread.start();
+        }
+    }
+
+    private boolean isOneDayParsed;
     private static class OneDayData
     {
         private final int uvRisk;
@@ -132,7 +147,7 @@ public class MainModel {
             URLConnection _url;
             BufferedReader in = null;
             String inputLine = "";
-            Log.d("Testing", "run() called");
+            isOneDayParsed = false;
             try
             {
                 aurl = new URL(url);
@@ -151,7 +166,7 @@ public class MainModel {
             result = result.substring(i+1);
 
 
-            Log.d("Testing", result);
+
 
             parseOneDayXML();
         }
@@ -199,13 +214,6 @@ public class MainModel {
                                     {
                                         String[] desSplit = temp.split(",");
 
-                                        for (int i = 0; i < desSplit.length; i++)
-                                        {
-                                            Log.d("LOOP", desSplit[i] + " " + i);
-                                        }
-
-
-
                                         currentTemperature = valueFromString(desSplit[0].split(":")[1]);
                                         windDir =  desSplit[1].split(":")[1].trim();
 
@@ -217,15 +225,6 @@ public class MainModel {
                                     }
                                     //I hate this.
 
-
-                                    Log.d("1D Test", locName);
-                                    Log.d("1D Test", Float.toString(currentTemperature));
-                                    Log.d("1D Test", Float.toString(highTemperature));
-                                    Log.d("1D Test", Float.toString(lowTemperature));
-                                    Log.d("1D Test", Float.toString(windSpeed));
-                                    Log.d("1D Test", Float.toString(pressure));
-                                    Log.d("1D Test", Float.toString(humidity));
-                                    Log.d("1D Test", Integer.toString(uvRisk));
                                 }
 
                                 break;
@@ -233,10 +232,7 @@ public class MainModel {
                         }
 
                     }
-                    else if (eventType == XmlPullParser.END_TAG)
-                    {
-                        Log.d("TEST", pullParser.getName());
-                    }
+
 
                     eventType = pullParser.next();
                 }
@@ -244,6 +240,7 @@ public class MainModel {
                 oneDayWeather = new ExtendedWeather(locName, null, currentTemperature,
                         null, day, highTemperature, lowTemperature, windSpeed, windDir,
                         visibility, pressure, humidity, uvRisk, null, null);
+                isOneDayParsed = true;
             }
             catch (XmlPullParserException | IOException e)
             {
@@ -267,14 +264,7 @@ public class MainModel {
             return Float.NaN;
         }
 
-        private String safeNextText(XmlPullParser parser)
-                throws XmlPullParserException, IOException {
-            String result = parser.nextText();
-            if (parser.getEventType() != XmlPullParser.END_TAG) {
-                parser.nextTag();
-            }
-            return result;
-        }
+
 
     }
     private class GetThreeDayTask implements Runnable
@@ -288,6 +278,7 @@ public class MainModel {
 
         @Override
         public void run() {
+
             URL aurl;
             URLConnection _url;
             BufferedReader in = null;
@@ -300,6 +291,7 @@ public class MainModel {
                 in = new BufferedReader(new InputStreamReader((_url.getInputStream())));
                 while((inputLine = in.readLine()) != null){
                     result = result + inputLine;
+                    Log.d("3D TEST", inputLine);
                 }
                 in.close();
             }
@@ -324,7 +316,7 @@ public class MainModel {
             try
             {
                 XmlPullParserFactory parserFactory = XmlPullParserFactory.newInstance();
-                parserFactory.setNamespaceAware(true);
+                parserFactory.setNamespaceAware(false);
                 XmlPullParser pullParser = parserFactory.newPullParser();
 
                 float maxTemp, minTemp, windSpeed;
@@ -340,33 +332,37 @@ public class MainModel {
                         switch (pullParser.getName())
                         {
                             case "title":
-                                temp = pullParser.nextText();
-
-                                if(temp != null && temp.contains("Minimum"))
+                                eventType = pullParser.next();
+                                if(eventType == XmlPullParser.TEXT)
                                 {
-                                    String[] titleSplit = temp.split(":");
-                                    if(!titleSplit[0].trim().equalsIgnoreCase("today"))
+                                    temp = pullParser.getText();
+                                    if(temp != null && temp.contains("Minimum"))
                                     {
-                                        day = titleSplit[0].trim().toUpperCase();
+                                        String[] titleSplit = temp.split(":");
+                                        if(!titleSplit[0].trim().equalsIgnoreCase("today"))
+                                        {
+                                            day = titleSplit[0].trim().toUpperCase();
+                                        }
+                                        else
+                                        {
+                                            day = null;
+                                        }
                                     }
-                                    else
+                                    else if (temp != null && temp.contains("BBC"))
                                     {
-                                        day = null;
-                                    }
-                                }
-                                else if (temp != null && temp.contains("BBC"))
-                                {
 
-                                    String[] locSplit = temp.split("-");
-                                    locName = locSplit[1].split(" ")[4];
+                                        String[] locSplit = temp.split("-");
+                                        locName = locSplit[1].split(" ")[4];
+                                    }
                                 }
                                 break;
 
                             case "description":
-                                temp = pullParser.nextText();
-
-                                if(temp != null && temp.contains("Maximum"))
+                                eventType = pullParser.next();
+                                if(eventType == XmlPullParser.TEXT)
                                 {
+                                    temp = pullParser.getText();
+                                    if(temp != null && temp.contains("Maximum")) {
                                     String[] strSplit = temp.split(",");
                                     maxTemp = valueFromString(strSplit[0]);
                                     minTemp = valueFromString(strSplit[1]);
@@ -374,9 +370,7 @@ public class MainModel {
                                     windSpeed = Float.parseFloat(strSplit[3].split(":")[1].replace("mph", "").trim()); //I legitimately lost passion for life writing this
 
 
-
-                                    if(day == null || day.isEmpty() || day.equalsIgnoreCase("tonight") || day.equalsIgnoreCase("today"))
-                                    {
+                                    if (day == null || day.isEmpty() || day.equalsIgnoreCase("tonight") || day.equalsIgnoreCase("today")) {
 
 
                                         int uvRisk;
@@ -387,13 +381,10 @@ public class MainModel {
                                         minTemperature = minTemp;
 
                                         uvRisk = Integer.parseInt(strSplit[7].split(":")[1].trim());
-                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                                        {
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
-
-
-                                            sunrise = LocalTime.parse(strSplit[9].substring(10,15).trim());
-                                            sunset = LocalTime.parse(strSplit[10].substring(9,14).trim());
+                                            sunrise = LocalTime.parse(strSplit[9].substring(10, 15).trim());
+                                            sunset = LocalTime.parse(strSplit[10].substring(9, 14).trim());
                                         }
 
                                         weather.add(new BasicWeather(locName, null, maxTemp, minTemp, windSpeed, windDir, null));
@@ -405,6 +396,7 @@ public class MainModel {
 
                                         weather.add(new BasicWeather(locName, null, maxTemp, minTemp, windSpeed, windDir, DayOfWeek.valueOf(day.toUpperCase())));
                                     }
+                                }
 
                                 }
                                 break;
