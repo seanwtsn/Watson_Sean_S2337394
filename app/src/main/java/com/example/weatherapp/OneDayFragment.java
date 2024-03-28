@@ -1,6 +1,7 @@
 package com.example.weatherapp;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,8 +32,8 @@ public class OneDayFragment extends Fragment {
     {
         super.onCreate(savedInstanceState);
         mainModel = new ViewModelProvider(this).get(MainViewModel.class);
-        currentWeather = mainModel.getOneDaySimple();
-        updateWeather();
+
+
     }
 
     @Override
@@ -41,8 +42,8 @@ public class OneDayFragment extends Fragment {
     {
         View view = inflater.inflate(R.layout.fragment_one_day, container, false);
         statusView = view.findViewById(R.id.one_day_text_status);
-
-
+        currentWeather = mainModel.getOneDayForecast();
+        updateWeather();
         // Inflate the layout for this fragment
         return view;
     }
@@ -62,7 +63,12 @@ public class OneDayFragment extends Fragment {
     private String buildStatusText()
     {
         StringBuilder sb = new StringBuilder();
-        sb.append("High: ").append(currentWeather.getHighTemperature()).append(" Low: ").append(currentWeather.getLowTemperature());
+        sb.append("High: ");
+        sb.append((int) currentWeather.getHighTemperature());
+        sb.append("°C");
+        sb.append((", Low: "));
+        sb.append((int) currentWeather.getLowTemperature());
+        sb.append("°C,");
         return sb.toString();
     }
     private void updateWeather()
@@ -70,6 +76,10 @@ public class OneDayFragment extends Fragment {
         if(currentWeather != null)
         {
             statusView.setText(buildStatusText());
+        }
+        else
+        {
+            Log.d("Testing", "Current Weather is Null");
         }
     }
 

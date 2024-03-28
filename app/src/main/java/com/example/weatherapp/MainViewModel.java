@@ -3,14 +3,16 @@ package com.example.weatherapp;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import java.util.ArrayList;
+
 public class MainViewModel extends ViewModel {
 
-    private MainModel model = new MainModel();
+    private MainModel model;
     private MutableLiveData<Boolean> hasParsedRecent;
 
     public MainViewModel()
     {
-
+        model = new MainModel();
     }
 
     public MutableLiveData<Boolean> getHasParsedRecent() {
@@ -26,20 +28,16 @@ public class MainViewModel extends ViewModel {
 
     }
 
-    public void getThreeDaySimple()
+    public ArrayList<BasicWeather> getThreeDaySimple()
     {
-
+        return model.getThreeDay();
     }
 
-    public ExtendedWeather getOneDaySimple()
+    public ExtendedWeather getOneDayForecast()
     {
-        if(model.returnOneDayWeather() == null)
-        {
-            model.startOneDayParse();
-            model.startThreeDayParse();
-        }
-
-        return model.returnOneDayWeather();
+        return model.getOneDayExtended();
     }
+
+
 
 }
