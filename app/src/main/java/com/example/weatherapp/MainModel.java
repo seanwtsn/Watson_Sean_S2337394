@@ -9,7 +9,7 @@ public class MainModel {
     private final String URLOne = "https://weather-broker-cdn.api.bbci.co.uk/en/observation/rss/2643123";
 
     private ExtendedWeather oneDayExtended;
-    private ArrayList<ExtendedWeather> threeDay;
+    private ArrayList<BasicWeather> threeDay;
 
     public MainModel() {
         getWeather();
@@ -21,11 +21,14 @@ public class MainModel {
         GetWeatherTask getWeatherTask = new GetWeatherTask(URLThree, URLOne);
         Thread data = new Thread(getWeatherTask);
         data.start();
-        try {
+        try
+        {
             data.join();
             oneDayExtended = getWeatherTask.returnOneDayWeatherExtended();
-
-        } catch (InterruptedException e) {
+            threeDay = getWeatherTask.returnThreeDayWeather();
+        }
+        catch (InterruptedException e)
+        {
             throw new RuntimeException(e);
         }
 
@@ -35,7 +38,13 @@ public class MainModel {
     private boolean isOneDayParsed;
 
 
-    public ExtendedWeather getOneDayExtended() {
+    public ExtendedWeather getOneDayExtended()
+    {
         return oneDayExtended;
+    }
+
+    public ArrayList<BasicWeather> getThreeDay()
+    {
+        return threeDay;
     }
 }

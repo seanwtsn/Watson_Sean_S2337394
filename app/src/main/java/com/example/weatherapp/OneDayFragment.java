@@ -63,7 +63,12 @@ public class OneDayFragment extends Fragment {
     private String buildStatusText()
     {
         StringBuilder sb = new StringBuilder();
-        sb.append("High: ").append(currentWeather.getHighTemperature()).append(" Low: ").append(currentWeather.getLowTemperature());
+        sb.append("High: ");
+        sb.append((int) currentWeather.getHighTemperature());
+        sb.append("°C");
+        sb.append((", Low: "));
+        sb.append((int) currentWeather.getLowTemperature());
+        sb.append("°C,");
         return sb.toString();
     }
     private void updateWeather()

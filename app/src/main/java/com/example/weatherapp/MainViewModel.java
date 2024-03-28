@@ -3,6 +3,8 @@ package com.example.weatherapp;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import java.util.ArrayList;
+
 public class MainViewModel extends ViewModel {
 
     private MainModel model;
@@ -26,9 +28,9 @@ public class MainViewModel extends ViewModel {
 
     }
 
-    public void getThreeDaySimple()
+    public ArrayList<BasicWeather> getThreeDaySimple()
     {
-
+        return model.getThreeDay();
     }
 
     public ExtendedWeather getOneDayForecast()
