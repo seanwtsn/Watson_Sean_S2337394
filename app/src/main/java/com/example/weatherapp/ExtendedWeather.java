@@ -23,8 +23,8 @@ public class ExtendedWeather extends BasicWeather {
     @Nullable private int uvRisk;
     @Nullable private LocalTime sunrise;
     @Nullable private LocalTime sunset;
-    public ExtendedWeather(String locationName, LatLng latLng, float currentTemperature, float[] laterTemperatures, DayOfWeek day, float highTemperature, float lowTemperature, float windSpeed, String windDirection, String visibility, float pressure, float humidity, int uvRisk, LocalTime sunrise, LocalTime sunset) {
-        super(locationName, latLng, highTemperature, lowTemperature, windSpeed, windDirection, day);
+    public ExtendedWeather(String locationName, LatLng latLng, float currentTemperature, float[] laterTemperatures, DayOfWeek day, float highTemperature, float lowTemperature, float windSpeed, String windDirection, String visibility, float pressure, float humidity, int uvRisk, LocalTime sunrise, LocalTime sunset, String conditions) {
+        super(locationName, latLng, highTemperature, lowTemperature, windSpeed, windDirection, day, conditions);
         this.currentTemperature = currentTemperature;
         this.laterTemperatures = laterTemperatures;
         this.day = day;

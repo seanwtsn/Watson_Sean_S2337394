@@ -182,7 +182,7 @@ public class GetWeatherTask implements Runnable
                 XmlPullParserFactory parserFactory = XmlPullParserFactory.newInstance();
                 parserFactory.setNamespaceAware(false);
                 XmlPullParser pullParser = parserFactory.newPullParser();
-                String locName = "", windDir = null, visibility = null;
+                String locName = "", windDir = null, visibility = null, conditions="";
                 LatLng locLatLng = null;
                 float currentTemperature = 0, highTemperature = 0, lowTemperature = 0, windSpeed = 0, pressure = 0, humidity = 0;
                 DayOfWeek day = null;
@@ -201,8 +201,17 @@ public class GetWeatherTask implements Runnable
                                 if (eventType == XmlPullParser.TEXT) {
                                     temp = pullParser.getText();
                                     if (temp.contains("GMT")) {
+
                                         String[] titleSplit = temp.split(":", 1);
+                                        for (int i = 0; i < titleSplit.length; i++)
+                                        {
+                                            Log.d("Cheese", titleSplit[i]);
+                                        }
+
                                         day = DayOfWeek.valueOf(titleSplit[0].split("-")[0].trim().toUpperCase());
+                                        String[] condSplit = temp.split(":");
+
+                                        conditions = condSplit[2].split(",")[0].trim();
                                     }
                                 }
                                 break;
@@ -238,7 +247,7 @@ public class GetWeatherTask implements Runnable
 
                 oneDayWeather = new ExtendedWeather(locName, null, currentTemperature,
                         null, day, highTemperature, lowTemperature, windSpeed, windDir,
-                        visibility, pressure, humidity, uvRisk, null, null);
+                        visibility, pressure, humidity, uvRisk, null, null, conditions);
 
                 isOneDayFinished = true;
                 status.notify();
@@ -272,7 +281,7 @@ public class GetWeatherTask implements Runnable
                 XmlPullParser pullParser = parserFactory.newPullParser();
 
                 float maxTemp, minTemp, windSpeed;
-                String windDir, locName = "", day = "";
+                String windDir, locName = "", day = "", conditions="";
 
                 pullParser.setInput(new StringReader(threeDayResult));
                 int eventType = pullParser.getEventType();
@@ -291,6 +300,7 @@ public class GetWeatherTask implements Runnable
                                     if(temp != null && temp.contains("Minimum"))
                                     {
                                         String[] titleSplit = temp.split(":");
+                                        conditions = titleSplit[1].split(",")[0].trim();
                                         if(!titleSplit[0].trim().equalsIgnoreCase("today"))
                                         {
                                             day = titleSplit[0].trim().toUpperCase();
@@ -339,7 +349,7 @@ public class GetWeatherTask implements Runnable
                                                 sunset = LocalTime.parse(strSplit[10].substring(9, 14).trim());
                                             }
 
-                                            weather.add(new BasicWeather(locName, null, maxTemp, minTemp, windSpeed, windDir, null));
+                                            weather.add(new BasicWeather(locName, null, maxTemp, minTemp, windSpeed, windDir, null, conditions));
                                             oneDayData = new OneDayData(uvRisk, sunrise, sunset, maxTemperature, minTemperature);
                                             createDetailedOneDay();
                                             Log.d("T", "CREATE 1D");
@@ -347,7 +357,7 @@ public class GetWeatherTask implements Runnable
                                         else
                                         {
 
-                                            weather.add(new BasicWeather(locName, null, maxTemp, minTemp, windSpeed, windDir, DayOfWeek.valueOf(day.toUpperCase())));
+                                            weather.add(new BasicWeather(locName, null, maxTemp, minTemp, windSpeed, windDir, DayOfWeek.valueOf(day.toUpperCase()), conditions));
                                         }
                                     }
 

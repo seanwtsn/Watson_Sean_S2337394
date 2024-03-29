@@ -32,8 +32,8 @@
 
         <ImageView
             android:id="@+id/image_icon_three"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
             android:layout_marginTop="4dp"
             android:layout_gravity="center"
             android:src="@drawable/icon_sun_norays" />
@@ -77,8 +77,8 @@
         <ImageView
             android:id="@+id/image_icon_two"
             android:layout_marginTop="4dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
             android:layout_gravity="center"
             android:src="@drawable/icon_sun_norays" />
 
@@ -119,10 +119,10 @@
         <ImageView
             android:id="@+id/image_icon_today"
             android:layout_marginTop="4dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
             android:layout_gravity="center"
-            android:src="@drawable/icon_sun_norays" />
+            android:src="@drawable/cloud_light_rain" />
 
         <TextView
             android:id="@+id/temperature_today"

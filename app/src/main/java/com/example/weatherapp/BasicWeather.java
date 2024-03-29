@@ -10,7 +10,7 @@ import java.time.DayOfWeek;
 //implement a menu to show more detail, but this will do for now.
 public class BasicWeather {
     private String locationName;
-
+    private String conditions;
     @Nullable private LatLng latLng;
     private float highTemperature;
     private float lowTemperature;
@@ -19,7 +19,7 @@ public class BasicWeather {
 
     @Nullable private DayOfWeek day;
 
-    public BasicWeather(String locationName, LatLng latLng, float highTemperature, float lowTemperature, float windSpeed, String windDirection, DayOfWeek day){
+    public BasicWeather(String locationName, LatLng latLng, float highTemperature, float lowTemperature, float windSpeed, String windDirection, DayOfWeek day, String conditions){
         this.locationName = locationName;
         this.latLng = latLng;
         this.highTemperature = highTemperature;
@@ -27,6 +27,7 @@ public class BasicWeather {
         this.windSpeed = windSpeed;
         this.windDirection = windDirection;
         this.day = day;
+        this.conditions = conditions;
     }
 
     public String getLocationName() {
@@ -84,5 +85,13 @@ public class BasicWeather {
 
     public void setDay(DayOfWeek day) {
         this.day = day;
+    }
+
+    public String getConditions() {
+        return conditions;
+    }
+
+    public void setConditions(String conditions) {
+        this.conditions = conditions;
     }
 }
