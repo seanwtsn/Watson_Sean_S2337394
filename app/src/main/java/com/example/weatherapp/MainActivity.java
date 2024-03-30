@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
         setContentView(R.layout.activity_main);
         fragmentContainerView = binding.fragmentContainerView;
-        setFragmentContainerView(new ThreeDaySmallFragment());
+        setFragmentContainerView(new WeatherFragment());
     }
 
     public void onStart() {

@@ -25,13 +25,14 @@ public class WeatherIconHelper
             case "partly cloudy":
             case "drizzle":
             case "heavy rain":
+            case "clear sky":
 
         }
 
 
 
 
-        return Integer.parseInt(null);
+        return 0;
     }
 
 

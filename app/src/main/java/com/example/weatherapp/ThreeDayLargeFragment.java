@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,6 +29,15 @@ public class ThreeDayLargeFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        TextView[][] textViews = new TextView[3][];
+
+        //TODO: Fix the text views and some how make it speedy and easy to access.
+        TextView temperatureOne;
+        TextView windSpeedOne;
+        TextView windDirOne;
+        TextView uvOne;
+
+
         mViewModel = new ViewModelProvider(this).get(ThreeDayLargeViewModel.class);
 
         // TODO: Use the ViewModel
