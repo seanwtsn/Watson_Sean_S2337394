@@ -9,28 +9,21 @@ import android.view.ViewGroup;
 
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class WeatherFragment extends Fragment {
 
-    private final MainModel model = new MainModel();
+    private MainViewModel viewModel;
     public WeatherFragment()
     {
 
     }
-
-    public static WeatherFragment newInstance(int columnCount) {
-        WeatherFragment fragment = new WeatherFragment();
-        Bundle args = new Bundle();
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
 
     }
 
@@ -40,17 +33,18 @@ public class WeatherFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_weather_item_list, container, false);
 
-        // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (model.getLocationRSS().size() <= 1) {
+        viewModel.getData().observe(getViewLifecycleOwner(), mainModel -> {
+
+            if (view instanceof RecyclerView) {
+                Context context = view.getContext();
+                RecyclerView recyclerView = (RecyclerView) view;
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, model.getLocationRSS().size()));
+                recyclerView.setAdapter(new WeatherRecyclerViewAdapter(viewModel.getLocationFromName(), viewModel));
             }
-            recyclerView.setAdapter(new WeatherRecyclerViewAdapter(model.getLocationRSS().keySet().toArray(String[]::new)));
-        }
+        });
+
+        // Set the adapter
+
         return view;
     }
 }

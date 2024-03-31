@@ -14,31 +14,47 @@ import androidx.lifecycle.ViewModelProvider;
 public class ThreeDayLargeFragment extends Fragment {
 
     private ThreeDayLargeViewModel mViewModel;
+    private String rss;
 
-
-    public static ThreeDayLargeFragment newInstance() {
-        return new ThreeDayLargeFragment();
+    public ThreeDayLargeFragment(String rss)
+    {
+        this.rss = rss;
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_three_day_large, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_three_day_large, container, false);
+
+        TextView temp = view.findViewById(R.id.temperature_text_one);
+
+        mViewModel.getData().observe(getViewLifecycleOwner(), getData ->
+        {
+            temp.setText(Float.toString((int)mViewModel.getData().getValue().getThreeDay().get(0).getHighTemperature()));
+
+        });
+
+        return view;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        TextView[][] textViews = new TextView[3][];
 
-        //TODO: Fix the text views and some how make it speedy and easy to access.
-        TextView temperatureOne;
-        TextView windSpeedOne;
-        TextView windDirOne;
-        TextView uvOne;
 
 
         mViewModel = new ViewModelProvider(this).get(ThreeDayLargeViewModel.class);
+
+
+
+
+
+        //TextView[][] textViews = new TextView[3][];
+
+        //TODO: Fix the text views and some how make it speedy and easy to access.
+
+
 
         // TODO: Use the ViewModel
     }

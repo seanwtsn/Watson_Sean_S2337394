@@ -1,5 +1,7 @@
 package com.example.weatherapp;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.ArrayList;
@@ -7,15 +9,24 @@ import java.util.ArrayList;
 
 public class ThreeDayLargeViewModel extends ViewModel
 {
-    private MainModel model;
-    private ArrayList<BasicWeather> threeDay;
+    private MutableLiveData<MainModel> model;
 
-    public ArrayList<BasicWeather> getThreeDay() {
-        return threeDay;
+    public ThreeDayLargeViewModel()
+    {
+        model = new MutableLiveData<>(new MainModel());
     }
 
-    public void setThreeDay(ArrayList<BasicWeather> threeDay) {
-        this.threeDay = threeDay;
+    public LiveData<MainModel> getData()
+    {
+        return model;
     }
-    // TODO: Implement the ViewModel
+
+    public ArrayList<BasicWeather> getThreeDaySimple()
+    {
+        return getData().getValue().getThreeDay();
+    }
+
+    public ArrayList<BasicWeather> threeDay;
+
+
 }

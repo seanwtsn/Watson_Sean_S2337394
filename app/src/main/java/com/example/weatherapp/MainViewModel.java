@@ -1,43 +1,36 @@
 package com.example.weatherapp;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MainViewModel extends ViewModel {
-
-    private MainModel model;
-    private MutableLiveData<Boolean> hasParsedRecent;
+    private final MutableLiveData<MainModel> model;
 
     public MainViewModel()
     {
-        model = new MainModel();
+        model = new MutableLiveData<>(new MainModel());
     }
 
-    public MutableLiveData<Boolean> getHasParsedRecent() {
-        if(hasParsedRecent == null)
-        {
-            hasParsedRecent = new MutableLiveData<Boolean>();
-        }
-        return hasParsedRecent;
-    }
-
-    public void getThreeDayDetailed()
+    public LiveData<MainModel> getData()
     {
-
+        return model;
     }
-
     public ArrayList<BasicWeather> getThreeDaySimple()
     {
-        return model.getThreeDay();
+        return getData().getValue().getThreeDay();
     }
 
     public ExtendedWeather getOneDayForecast()
     {
-        return model.getOneDayExtended();
+        return getData().getValue().getOneDayExtended();
     }
 
-
-
+    public HashMap<String, String> getLocationFromName()
+    {
+        return getData().getValue().getLocationRSS();
+    }
 }
