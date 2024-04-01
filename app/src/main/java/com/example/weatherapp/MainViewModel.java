@@ -1,17 +1,20 @@
 package com.example.weatherapp;
 
+import android.app.Application;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
-public class MainViewModel extends ViewModel {
-    private final MutableLiveData<MainModel> model;
+public class MainViewModel extends AndroidViewModel {
 
-    public MainViewModel()
-    {
+    //TODO: USE DEP INJECT TO GET CONTEXT FOR LOADING SHIT
+    private MutableLiveData<MainModel> model;
+    public MainViewModel(@NonNull Application application) {
+        super(application);
         model = new MutableLiveData<>(new MainModel());
     }
 
@@ -29,8 +32,10 @@ public class MainViewModel extends ViewModel {
         return getData().getValue().getOneDayExtended();
     }
 
-    public HashMap<String, String> getLocationFromName()
+    public ArrayList<LocationRSS> getLocationFromName()
     {
-        return getData().getValue().getLocationRSS();
+        return getData().getValue().getLocationRSS(getApplication().getApplicationContext());
     }
+
+
 }

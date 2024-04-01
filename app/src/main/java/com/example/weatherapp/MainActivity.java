@@ -15,8 +15,8 @@ public class MainActivity extends AppCompatActivity {
     private MainViewModel viewModel;
     private FragmentContainerView fragmentContainerView;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
+
+    @Override protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         fragmentContainerView = binding.fragmentContainerView;
         setFragmentContainerView(new WeatherFragment());
+
     }
 
     public void onStart() {

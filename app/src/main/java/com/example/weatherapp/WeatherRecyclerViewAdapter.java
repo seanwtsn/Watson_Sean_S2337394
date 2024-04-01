@@ -10,14 +10,13 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
 
 public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<WeatherRecyclerViewAdapter.ViewHolder> {
 
     private String[] values;
     private String[] keys;
-
     private final MainViewModel model;
 
     private final View.OnClickListener holderOnClickerListener = new View.OnClickListener() {
@@ -29,17 +28,22 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<WeatherRecy
     };
 
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
-    public WeatherRecyclerViewAdapter(HashMap<String, String> values, MainViewModel model)
+    public WeatherRecyclerViewAdapter(ArrayList<LocationRSS> values, MainViewModel model)
     {
-        this.values = values.keySet().toArray(String[]::new);
-        this.keys = values.values().toArray(String[]::new);
+        this.values = new String[values.size()];
+        this.keys = new String[values.size()];
+        for (int i = 0; i < values.size(); i++)
+        {
+            this.values[i] = values.get(i).getName();
+            this.keys[i] = values.get(i).getRssKey();
+        }
+
         this.model = model;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_weather_item, parent, false);
         view.setOnClickListener(holderOnClickerListener);
         //return new ViewHolder(FragmentWeatherItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
@@ -57,7 +61,7 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<WeatherRecy
     @Override
     public int getItemCount()
     {
-        return values.length;
+        return this.values.length;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

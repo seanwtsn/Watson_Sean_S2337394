@@ -42,21 +42,8 @@ public class ThreeDayLargeFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
         mViewModel = new ViewModelProvider(this).get(ThreeDayLargeViewModel.class);
 
-
-
-
-
-        //TextView[][] textViews = new TextView[3][];
-
-        //TODO: Fix the text views and some how make it speedy and easy to access.
-
-
-
-        // TODO: Use the ViewModel
     }
 
 }

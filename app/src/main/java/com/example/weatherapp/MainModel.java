@@ -1,31 +1,21 @@
 package com.example.weatherapp;
 
 
+import android.content.Context;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class MainModel {
     private ExtendedWeather oneDayExtended;
     private ArrayList<BasicWeather> threeDay;
-    private HashMap<String,String> locationRSS;
+    private ArrayList<LocationRSS> locationRSS;
 
     public MainModel()
     {
-
         //TODO: FIX
         getWeather("2643123");
-        locationRSS = new HashMap<String, String>()
-        {
-            {
-                this.put("Glasgow", "2648579");
-                this.put("Edinburgh", "2650225");
-                this.put("Irvine", "2646032");
-                this.put("Paris", "2988507");
-                this.put("Lisbon", "2267057");
-            }
-        };
+
     }
 
     private String constructRSSURL(String key, boolean isOneDay)
@@ -74,6 +64,24 @@ public class MainModel {
 
     private boolean isOneDayParsed;
 
+    public ArrayList<LocationRSS> getLocationRSS(Context context) {
+        if(locationRSS != null)
+        {
+            return locationRSS;
+        }
+        else
+        {
+            FileRead fileRead = new FileRead(context);
+            Thread t = new Thread(fileRead);
+            t.start();
+            try {
+                t.join();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            return fileRead.getLocations();
+        }
+    }
 
     public ExtendedWeather getOneDayExtended()
     {
@@ -84,12 +92,7 @@ public class MainModel {
     {
         return threeDay;
     }
-
-    public HashMap<String, String> getLocationRSS() {
-        return locationRSS;
-    }
-
-    public void setLocationRSS(HashMap<String, String> locationRSS)
+    public void setLocationRSS(ArrayList<LocationRSS> locationRSS)
     {
         this.locationRSS = locationRSS;
     }
