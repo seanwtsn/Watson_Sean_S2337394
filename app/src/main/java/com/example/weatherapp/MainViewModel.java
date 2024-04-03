@@ -27,6 +27,11 @@ public class MainViewModel extends AndroidViewModel {
         return getData().getValue().getThreeDay();
     }
 
+    public ArrayList<ExtendedWeather> getThreeDayExtended()
+    {
+        return getData().getValue().getThreeDayExtended();
+    }
+
     public ExtendedWeather getOneDayForecast()
     {
         return getData().getValue().getOneDayExtended();
@@ -37,5 +42,9 @@ public class MainViewModel extends AndroidViewModel {
         return getData().getValue().getLocationRSS(getApplication().getApplicationContext());
     }
 
+    public String returnWeatherDirection(String value)
+    {
+        return getData().getValue().getWindDir(value);
+    }
 
 }

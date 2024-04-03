@@ -15,7 +15,6 @@ public class ExtendedWeather extends BasicWeather {
     //of the 3-day arraylist.
 
     @Nullable private float currentTemperature;
-    private float[] laterTemperatures;
     private DayOfWeek day;
     private String visibility;
     private float pressure;
@@ -23,10 +22,9 @@ public class ExtendedWeather extends BasicWeather {
     @Nullable private int uvRisk;
     @Nullable private LocalTime sunrise;
     @Nullable private LocalTime sunset;
-    public ExtendedWeather(String locationName, LatLng latLng, float currentTemperature, float[] laterTemperatures, DayOfWeek day, float highTemperature, float lowTemperature, float windSpeed, String windDirection, String visibility, float pressure, float humidity, int uvRisk, LocalTime sunrise, LocalTime sunset, String conditions) {
+    public ExtendedWeather(String locationName, LatLng latLng, float currentTemperature, DayOfWeek day, float highTemperature, float lowTemperature, float windSpeed, String windDirection, String visibility, float pressure, float humidity, int uvRisk, LocalTime sunrise, LocalTime sunset, String conditions) {
         super(locationName, latLng, highTemperature, lowTemperature, windSpeed, windDirection, day, conditions);
         this.currentTemperature = currentTemperature;
-        this.laterTemperatures = laterTemperatures;
         this.day = day;
         this.visibility = visibility;
         this.pressure = pressure;
@@ -46,15 +44,6 @@ public class ExtendedWeather extends BasicWeather {
     public void setCurrentTemperature(float currentTemperature) {
         this.currentTemperature = currentTemperature;
     }
-
-    public float[] getLaterTemperatures() {
-        return laterTemperatures;
-    }
-
-    public void setLaterTemperatures(float[] laterTemperatures) {
-        this.laterTemperatures = laterTemperatures;
-    }
-
 
 
     public DayOfWeek getDay() {

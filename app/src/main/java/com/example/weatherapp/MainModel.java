@@ -9,6 +9,7 @@ import java.util.ArrayList;
 public class MainModel {
     private ExtendedWeather oneDayExtended;
     private ArrayList<BasicWeather> threeDay;
+    private ArrayList<ExtendedWeather> threeDayExtended;
     private ArrayList<LocationRSS> locationRSS;
 
     public MainModel()
@@ -16,6 +17,33 @@ public class MainModel {
         //TODO: FIX
         getWeather("2643123");
 
+    }
+
+    public String getWindDir(String wd)
+    {
+        wd = wd.toLowerCase();
+
+        switch(wd)
+        {
+            case "south westerly":
+                return "SW";
+            case "north westerly":
+                return "NW";
+            case "north easterly":
+                return "NE";
+            case "south easterly":
+                return "SE";
+            case "easterly":
+                return "E";
+            case "northerly":
+                return "N";
+            case "westerly":
+                return "W";
+            case "southerly":
+                return "S";
+        }
+
+        return "NA";
     }
 
     private String constructRSSURL(String key, boolean isOneDay)
@@ -53,6 +81,7 @@ public class MainModel {
             data.join();
             oneDayExtended = getWeatherTask.returnOneDayWeatherExtended();
             threeDay = getWeatherTask.returnThreeDayWeather();
+            threeDayExtended = getWeatherTask.returnThreeDayWeatherExtended();
         }
         catch (InterruptedException e)
         {
@@ -91,6 +120,11 @@ public class MainModel {
     public ArrayList<BasicWeather> getThreeDay()
     {
         return threeDay;
+    }
+
+    public ArrayList<ExtendedWeather> getThreeDayExtended()
+    {
+        return threeDayExtended;
     }
     public void setLocationRSS(ArrayList<LocationRSS> locationRSS)
     {

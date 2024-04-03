@@ -33,6 +33,7 @@ public class GetWeatherTask implements Runnable
     private String oneDayResult;
     private String threeDayResult;
     private ArrayList<BasicWeather> threeDayWeather;
+    private ArrayList<ExtendedWeather> threeDayWeatherExtended;
     private ExtendedWeather oneDayWeather;
     private ExtendedWeather OneDayWeatherExtended;
     private OneDayData oneDayData;
@@ -47,6 +48,12 @@ public class GetWeatherTask implements Runnable
     public ArrayList<BasicWeather> returnThreeDayWeather() {
         return threeDayWeather;
     }
+
+    public ArrayList<ExtendedWeather> returnThreeDayWeatherExtended()
+    {
+        return threeDayWeatherExtended;
+    }
+
     public ExtendedWeather returnOneDayWeatherSimple()
     {
         return oneDayWeather;
@@ -246,7 +253,7 @@ public class GetWeatherTask implements Runnable
                 }
 
                 oneDayWeather = new ExtendedWeather(locName, null, currentTemperature,
-                        null, day, highTemperature, lowTemperature, windSpeed, windDir,
+                        day, highTemperature, lowTemperature, windSpeed, windDir,
                         visibility, pressure, humidity, uvRisk, null, null, conditions);
 
                 isOneDayFinished = true;
@@ -274,14 +281,20 @@ public class GetWeatherTask implements Runnable
                 }
             }
             ArrayList<BasicWeather> weather = new ArrayList<>(3);
+            ArrayList<ExtendedWeather> weatherExtended = new ArrayList<>(3);
             try
             {
                 XmlPullParserFactory parserFactory = XmlPullParserFactory.newInstance();
                 parserFactory.setNamespaceAware(false);
                 XmlPullParser pullParser = parserFactory.newPullParser();
 
-                float maxTemp, minTemp, windSpeed;
-                String windDir, locName = "", day = "", conditions="";
+                float maxTemp, minTemp, windSpeed, pressure, humidity;
+                String windDir, locName = "", day = "", conditions="", visibility;
+
+                int uvRisk;
+                LocalTime sunrise = null, sunset = null;
+                float maxTemperature, minTemperature;
+
 
                 pullParser.setInput(new StringReader(threeDayResult));
                 int eventType = pullParser.getEventType();
@@ -330,35 +343,34 @@ public class GetWeatherTask implements Runnable
                                         minTemp = valueFromString(strSplit[1]);
                                         windDir = strSplit[2].split(":")[1].trim();
                                         windSpeed = Float.parseFloat(strSplit[3].split(":")[1].replace("mph", "").trim()); //I legitimately lost passion for life writing this
+                                        visibility = strSplit[4].split(":")[1].trim();
+                                        pressure = Float.parseFloat(strSplit[5].split(":")[1].replace("mb", "").trim());
+                                        humidity = Float.parseFloat(strSplit[6].split(":")[1].replace("%","").trim());
+                                        uvRisk = Integer.parseInt(strSplit[7].split(":")[1].trim());
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
-
+                                            sunrise = LocalTime.parse(strSplit[9].substring(10, 15).trim());
+                                            sunset = LocalTime.parse(strSplit[10].substring(9, 14).trim());
+                                        }
                                         if (day == null || day.isEmpty() || day.equalsIgnoreCase("tonight") || day.equalsIgnoreCase("today")) {
 
-
-                                            int uvRisk;
-                                            LocalTime sunrise = null, sunset = null;
-                                            float maxTemperature, minTemperature;
-
-                                            maxTemperature = maxTemp;
-                                            minTemperature = minTemp;
-
-                                            uvRisk = Integer.parseInt(strSplit[7].split(":")[1].trim());
-                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
-                                                sunrise = LocalTime.parse(strSplit[9].substring(10, 15).trim());
-                                                sunset = LocalTime.parse(strSplit[10].substring(9, 14).trim());
-                                            }
-
                                             weather.add(new BasicWeather(locName, null, maxTemp, minTemp, windSpeed, windDir, null, conditions));
-                                            oneDayData = new OneDayData(uvRisk, sunrise, sunset, maxTemperature, minTemperature);
-                                            createDetailedOneDay();
-                                            Log.d("T", "CREATE 1D");
+                                            weatherExtended.add(new ExtendedWeather(locName, null, 0, null, maxTemp, minTemp, windSpeed, windDir, visibility, pressure, humidity, uvRisk, sunrise, sunset, conditions));
+
+                                            oneDayData = new OneDayData(uvRisk, sunrise, sunset, maxTemp, minTemp);
                                         }
                                         else
                                         {
 
                                             weather.add(new BasicWeather(locName, null, maxTemp, minTemp, windSpeed, windDir, DayOfWeek.valueOf(day.toUpperCase()), conditions));
+                                            weatherExtended.add(new ExtendedWeather(locName, null, 0, DayOfWeek.valueOf(day.toUpperCase().trim()), maxTemp, minTemp, windSpeed, windDir, visibility, pressure, humidity, uvRisk, sunrise, sunset, conditions));
+                                            createDetailedOneDay();
+                                            Log.d("T", "CREATE 1D");
+
                                         }
+
+
+
                                     }
 
                                 }
@@ -372,6 +384,7 @@ public class GetWeatherTask implements Runnable
                 }
 
                 threeDayWeather = weather;
+                threeDayWeatherExtended = weatherExtended;
 
                 for (int i = 0; i < threeDayWeather.size(); i++)
                 {
@@ -403,6 +416,7 @@ public class GetWeatherTask implements Runnable
                 assert threeDayWeather.get(1).getDay() != null;
                 Log.d("Condition Testing", "correctFirstDate: Build.Version Called");
                 threeDayWeather.get(0).setDay(threeDayWeather.get(1).getDay().minus(1));
+                threeDayWeatherExtended.get(0).setDay(threeDayWeatherExtended.get(1).getDay().minus(1));
             }
         }
     }
