@@ -1,8 +1,14 @@
-package com.example.weatherapp;
+package com.example.weatherapp.models;
 
 
 import android.content.Context;
 import android.util.Log;
+
+import com.example.weatherapp.data.BasicWeather;
+import com.example.weatherapp.data.ExtendedWeather;
+import com.example.weatherapp.data.LocationRSS;
+import com.example.weatherapp.data.tasks.FileRead;
+import com.example.weatherapp.data.tasks.GetWeatherTask;
 
 import java.util.ArrayList;
 

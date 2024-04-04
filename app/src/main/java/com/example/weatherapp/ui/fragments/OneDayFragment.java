@@ -1,4 +1,4 @@
-package com.example.weatherapp;
+package com.example.weatherapp.ui.fragments;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +9,10 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+
+import com.example.weatherapp.R;
+import com.example.weatherapp.data.ExtendedWeather;
+import com.example.weatherapp.ui.viewmodels.MainViewModel;
 
 public class OneDayFragment extends Fragment {
 

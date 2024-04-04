@@ -1,4 +1,4 @@
-package com.example.weatherapp;
+package com.example.weatherapp.ui.fragments;
 
 import android.content.Context;
 import android.os.Build;
@@ -12,6 +12,10 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.weatherapp.ui.viewmodels.MainViewModel;
+import com.example.weatherapp.R;
+import com.example.weatherapp.WeatherRecyclerViewAdapter;
 
 public class WeatherFragment extends Fragment {
 

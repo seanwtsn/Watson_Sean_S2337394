@@ -1,4 +1,4 @@
-package com.example.weatherapp;
+package com.example.weatherapp.ui.fragments;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +12,9 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+
+import com.example.weatherapp.R;
+import com.example.weatherapp.ui.viewmodels.ThreeDayLargeViewModel;
 
 import java.util.ArrayList;
 

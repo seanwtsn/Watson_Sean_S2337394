@@ -1,8 +1,10 @@
-package com.example.weatherapp;
+package com.example.weatherapp.data.tasks;
 
 import android.os.Build;
 import android.util.Log;
 
+import com.example.weatherapp.data.BasicWeather;
+import com.example.weatherapp.data.ExtendedWeather;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -113,10 +115,10 @@ public class GetWeatherTask implements Runnable
         public LocalTime getSunrise() {
             return sunrise;
         }
-
         public LocalTime getSunset() {
             return sunset;
         }
+
 
         public float getMaxTemperature() {
             return maxTemperature;

@@ -1,4 +1,4 @@
-package com.example.weatherapp;
+package com.example.weatherapp.ui.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.weatherapp.ui.viewmodels.MainViewModel;
 import com.example.weatherapp.databinding.FragmentMainViewBinding;
 
 public class MainFragment extends Fragment {

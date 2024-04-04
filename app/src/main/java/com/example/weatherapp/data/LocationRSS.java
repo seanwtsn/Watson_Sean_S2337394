@@ -1,4 +1,4 @@
-package com.example.weatherapp;
+package com.example.weatherapp.data;
 
 import com.google.android.gms.maps.model.LatLng;
 

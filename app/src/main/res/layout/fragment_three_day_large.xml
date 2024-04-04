@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:theme="@style/Theme.WeatherApp.Default"
-    tools:context=".ThreeDayLargeFragment">
+    tools:context=".ui.fragments.ThreeDayLargeFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

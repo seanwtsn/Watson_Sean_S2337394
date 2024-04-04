@@ -1,4 +1,4 @@
-package com.example.weatherapp;
+package com.example.weatherapp.ui.viewmodels;
 
 import android.app.Application;
 
@@ -6,6 +6,11 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+
+import com.example.weatherapp.data.BasicWeather;
+import com.example.weatherapp.data.ExtendedWeather;
+import com.example.weatherapp.data.LocationRSS;
+import com.example.weatherapp.models.MainModel;
 
 import java.util.ArrayList;
 
@@ -24,7 +29,20 @@ public class MainViewModel extends AndroidViewModel {
     }
     public ArrayList<BasicWeather> getThreeDaySimple()
     {
-        return getData().getValue().getThreeDay();
+        if(getData().getValue().getThreeDay() == null)
+        {
+            getData().getValue().doWeatherTask();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+            return getData().getValue().getThreeDay();
+        }
+        else
+        {
+            return getData().getValue().getThreeDay();
+        }
     }
 
     public ArrayList<ExtendedWeather> getThreeDayExtended()

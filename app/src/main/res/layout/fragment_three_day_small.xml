@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:theme="@style/Theme.WeatherApp.Default"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ThreeDaySmallFragment"
+    tools:context=".ui.fragments.ThreeDaySmallFragment"
     >
 
     <LinearLayout

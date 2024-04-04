@@ -7,7 +7,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.weatherapp.data.LocationRSS;
 import com.example.weatherapp.databinding.ActivityMainBinding;
+import com.example.weatherapp.ui.fragments.ThreeDaySmallFragment;
+import com.example.weatherapp.ui.viewmodels.MainViewModel;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
@@ -27,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
         setContentView(R.layout.activity_main);
         fragmentContainerView = binding.fragmentContainerView;
-        setFragmentContainerView(new WeatherFragment());
+        setFragmentContainerView(new ThreeDaySmallFragment());
 
     }
 

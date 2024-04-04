@@ -1,8 +1,9 @@
-package com.example.weatherapp;
+package com.example.weatherapp.data.tasks;
 
 import android.content.Context;
 import android.util.Log;
 
+import com.example.weatherapp.data.LocationRSS;
 import com.google.android.gms.maps.model.LatLng;
 
 

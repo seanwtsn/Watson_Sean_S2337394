@@ -10,6 +10,10 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.weatherapp.data.LocationRSS;
+import com.example.weatherapp.ui.fragments.ThreeDayLargeFragment;
+import com.example.weatherapp.ui.viewmodels.MainViewModel;
+
 import java.util.ArrayList;
 
 

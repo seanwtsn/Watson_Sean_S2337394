@@ -1,6 +1,8 @@
-package com.example.weatherapp;
+package com.example.weatherapp.helpers;
 
 import android.util.Log;
+
+import com.example.weatherapp.R;
 
 public class WeatherIconHelper
 {
@@ -20,12 +22,15 @@ public class WeatherIconHelper
             case "sunny intervals":
                 return R.drawable.icon_sun_norays;
             case "light rain showers":
-                return R.drawable.cloud_light_rain;
             case "light rain":
+                return R.drawable.cloud_light_rain;
             case "partly cloudy":
+                return R.drawable.partly_cloudy;
             case "drizzle":
             case "heavy rain":
+                return R.drawable.cloud_heavy_rain;
             case "clear sky":
+                return R.drawable.icon_sun_norays;
 
         }
 
