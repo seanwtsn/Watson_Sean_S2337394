@@ -15,8 +15,13 @@ public class MainModel {
     public MainModel()
     {
         //TODO: FIX
-        getWeather("2643123");
 
+
+    }
+
+    public void doWeatherTask()
+    {
+        getWeather("2643123");
     }
 
     public String getWindDir(String wd)

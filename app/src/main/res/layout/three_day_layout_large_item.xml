@@ -15,21 +15,22 @@
         android:text="Day"
         android:textColor="@color/white"
         android:textSize="20sp"
+        android:paddingStart="12dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/condition_icon_one"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginStart="2dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
         android:src="@drawable/icon_sun_norays"
         app:layout_constraintEnd_toStartOf="@+id/temperature_icon_one"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout_conversion_absoluteHeight="64dp"
-        tools:layout_conversion_absoluteWidth="64dp" />
+        />
 
     <ImageView
         android:id="@+id/imageView7"
@@ -78,9 +79,9 @@
 
     <TextView
         android:id="@+id/temperature_text_one"
-        android:layout_width="0dp"
+        android:layout_width="98dp"
         android:layout_height="27dp"
-        android:layout_marginEnd="196dp"
+        android:layout_marginEnd="184dp"
         android:text="Text"
         android:textColor="@color/white"
         android:textSize="20sp"
@@ -101,6 +102,15 @@
         tools:layout_conversion_absoluteHeight="27dp"
         tools:layout_conversion_absoluteWidth="40dp" />
 
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="27dp"
+        android:layout_height="27dp"
+        android:layout_marginStart="24dp"
+        android:src="@drawable/icon_humidity"
+        app:layout_constraintStart_toEndOf="@+id/temperature_text_one"
+        app:layout_constraintTop_toTopOf="@+id/temperature_text_one" />
+
     <TextView
         android:id="@+id/wind_dir_text_one"
         android:layout_width="wrap_content"
@@ -114,15 +124,6 @@
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="@+id/imageView5"
         app:layout_constraintStart_toEndOf="@+id/imageView5" />
-
-    <ImageView
-        android:id="@+id/imageView6"
-        android:layout_width="27dp"
-        android:layout_height="27dp"
-        android:layout_marginStart="16dp"
-        android:src="@drawable/icon_humidity"
-        app:layout_constraintStart_toEndOf="@+id/temperature_text_one"
-        app:layout_constraintTop_toTopOf="@+id/temperature_text_one" />
 
     <ImageView
         android:id="@+id/temperature_icon_one"
