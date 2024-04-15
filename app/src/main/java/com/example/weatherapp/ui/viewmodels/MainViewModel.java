@@ -27,11 +27,11 @@ public class MainViewModel extends AndroidViewModel {
     {
         return model;
     }
-    public ArrayList<BasicWeather> getThreeDaySimple()
+    public ArrayList<BasicWeather> getThreeDaySimple(String rss)
     {
         if(getData().getValue().getThreeDay() == null)
         {
-            getData().getValue().doWeatherTask();
+
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -63,6 +63,11 @@ public class MainViewModel extends AndroidViewModel {
     public String returnWeatherDirection(String value)
     {
         return getData().getValue().getWindDir(value);
+    }
+
+    public String returnCurrentRSSkey()
+    {
+        return getData().getValue().getCurrentRSSkey();
     }
 
 }

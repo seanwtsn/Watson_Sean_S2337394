@@ -4,30 +4,35 @@ package com.example.weatherapp.models;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.weatherapp.WeatherParsedListener;
 import com.example.weatherapp.data.BasicWeather;
 import com.example.weatherapp.data.ExtendedWeather;
 import com.example.weatherapp.data.LocationRSS;
 import com.example.weatherapp.data.tasks.FileRead;
 import com.example.weatherapp.data.tasks.GetWeatherTask;
+import com.example.weatherapp.helpers.ReturnClosestLocationHelper;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 
-public class MainModel {
+public class MainModel implements WeatherParsedListener {
+
+    private BasicWeather oneDay;
     private ExtendedWeather oneDayExtended;
     private ArrayList<BasicWeather> threeDay;
     private ArrayList<ExtendedWeather> threeDayExtended;
     private ArrayList<LocationRSS> locationRSS;
+    private String currentRSSkey;
 
     public MainModel()
     {
-        //TODO: FIX
-
 
     }
 
-    public void doWeatherTask()
+    public void doWeatherTask(String rss)
     {
-        getWeather("2643123");
+        currentRSSkey = rss;
+        getWeather(rss);
     }
 
     public String getWindDir(String wd)
@@ -59,6 +64,11 @@ public class MainModel {
 
     private String constructRSSURL(String key, boolean isOneDay)
     {
+        if(key == null || key.isEmpty())
+        {
+            key = "2648579";
+        }
+
         Log.d("RSS", key);
         StringBuilder sb = new StringBuilder();
         if(isOneDay)
@@ -87,19 +97,6 @@ public class MainModel {
         GetWeatherTask getWeatherTask = new GetWeatherTask(constructRSSURL(rssKey, false), constructRSSURL(rssKey, true));
         Thread data = new Thread(getWeatherTask);
         data.start();
-        try
-        {
-            data.join();
-            oneDayExtended = getWeatherTask.returnOneDayWeatherExtended();
-            threeDay = getWeatherTask.returnThreeDayWeather();
-            threeDayExtended = getWeatherTask.returnThreeDayWeatherExtended();
-        }
-        catch (InterruptedException e)
-        {
-            throw new RuntimeException(e);
-        }
-
-
     }
 
     private boolean isOneDayParsed;
@@ -140,5 +137,52 @@ public class MainModel {
     public void setLocationRSS(ArrayList<LocationRSS> locationRSS)
     {
         this.locationRSS = locationRSS;
+    }
+
+    public String getRSSKeyFromLocation(LatLng location)
+    {
+        ReturnClosestLocationHelper closestLocationHelper = new ReturnClosestLocationHelper();
+        double temp = 1f;
+        int index = 0;
+
+        if(!locationRSS.isEmpty())
+        {
+            for (int i = 0; i < locationRSS.size(); i++)
+            {
+                if(closestLocationHelper.getDistance(location, locationRSS.get(i).getPosition()) < temp)
+                {
+                    temp = closestLocationHelper.getDistance(location, locationRSS.get(i).getPosition());
+                    index = i;
+                }
+
+            }
+        }
+
+        return locationRSS.get(index).getRssKey();
+    }
+
+
+    public String getCurrentRSSkey() {
+        return currentRSSkey;
+    }
+
+    public void setCurrentRSSkey(String currentRSSkey)
+    {
+        this.currentRSSkey = currentRSSkey;
+    }
+
+
+    @Override
+    public void weatherSuccessfullyParsed(ArrayList<BasicWeather> threeDayBasic, ArrayList<ExtendedWeather> threeDayExtended, ExtendedWeather oneDayExtended)
+    {
+        this.threeDayExtended = threeDayExtended;
+        this.threeDay = threeDayBasic;
+        this.oneDayExtended = oneDayExtended;
+    }
+
+    @Override
+    public void weatherUnsuccessfullyParsed()
+    {
+
     }
 }
