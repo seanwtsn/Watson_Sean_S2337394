@@ -8,46 +8,49 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.example.weatherapp.R;
 import com.example.weatherapp.data.ExtendedWeather;
-import com.example.weatherapp.ui.viewmodels.MainViewModel;
+import com.example.weatherapp.ui.viewmodels.OneDayViewModel;
 
 public class OneDayFragment extends Fragment {
 
-    private MainViewModel mainModel;
-    private TextView statusView;
+
     private ExtendedWeather currentWeather;
+    private TextView statusView;
     public OneDayFragment() {
         // Required empty public constructor
-    }
-
-    public static OneDayFragment newInstance()
-    {
-        OneDayFragment fragment = new OneDayFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
+    }@Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        mainModel = new ViewModelProvider(this).get(MainViewModel.class);
-
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
+        OneDayViewModel oneDayViewModel = ViewModelProviders.of(this).get(OneDayViewModel.class);
+
+
         View view = inflater.inflate(R.layout.fragment_one_day, container, false);
-        statusView = view.findViewById(R.id.one_day_text_status);
-        currentWeather = mainModel.getOneDayForecast();
-        updateWeather();
+
+        oneDayViewModel.getOneDayWeather().observe(getViewLifecycleOwner(), getData -> {
+
+            statusView = view.findViewById(R.id.one_day_text_status);
+
+            currentWeather = oneDayViewModel.getOneDayWeather().getValue();
+
+            if(currentWeather == null)
+            {
+
+            }
+            else
+            {
+                updateWeather();
+            }
+        });
         // Inflate the layout for this fragment
         return view;
     }
@@ -84,7 +87,17 @@ public class OneDayFragment extends Fragment {
         else
         {
             Log.d("Testing", "Current Weather is Null");
+
+
+
+
+
         }
+    }
+
+    private void errorWeather()
+    {
+
     }
 
 }

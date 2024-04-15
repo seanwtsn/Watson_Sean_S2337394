@@ -4,8 +4,49 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_box"
     tools:context=".ui.fragments.MainFragment">
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="8dp"
+        android:src="@drawable/icon_folder"
+        app:layout_constraintEnd_toStartOf="@+id/main_location_text"
+        app:layout_constraintTop_toTopOf="@+id/main_location_text" />
+
+    <TextView
+        android:id="@+id/main_location_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="40dp"
+
+        android:text="Location"
+        android:textSize="32sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/temperature_one_day_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="32°C"
+        android:textSize="60sp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="@+id/main_location_text"
+        app:layout_constraintStart_toStartOf="@+id/main_location_text"
+        app:layout_constraintTop_toBottomOf="@+id/main_location_text" />
+
+    <TextView
+        android:id="@+id/main_conditions_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cloudy With Showers"
+        android:textSize="24sp"
+        android:layout_marginTop="30dp"
+        app:layout_constraintStart_toStartOf="@+id/temperature_one_day_text"
+        app:layout_constraintTop_toBottomOf="@+id/temperature_one_day_text" />
+
 
 
 

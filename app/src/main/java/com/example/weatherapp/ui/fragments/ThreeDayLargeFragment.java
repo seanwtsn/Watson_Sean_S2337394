@@ -20,15 +20,19 @@ import java.util.ArrayList;
 
 public class ThreeDayLargeFragment extends Fragment {
 
-    private ThreeDayLargeViewModel mViewModel;
+    String rss;
     public ThreeDayLargeFragment(String rss)
     {
-
+        this.rss = rss;
     }
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
+        ThreeDayLargeViewModel mViewModel;
+
+        mViewModel = new ViewModelProvider(this).get(ThreeDayLargeViewModel.class);
+
 
         View view = inflater.inflate(R.layout.fragment_three_day_large, container, false);
 
@@ -53,9 +57,9 @@ public class ThreeDayLargeFragment extends Fragment {
                         mViewModel.getData().getValue().getThreeDayExtended().get(i).getDay().toString().substring(1).toLowerCase();
 
                 TextView dayText = constraintLayouts.get(i).findViewById(R.id.day_one_text);
-                        dayText.setText(dt);
+                dayText.setText(dt);
 
-                        TextView temperature = constraintLayouts.get(i).findViewById(R.id.temperature_text_one);
+                TextView temperature = constraintLayouts.get(i).findViewById(R.id.temperature_text_one);
                 temperature.setText(sb);
 
                 TextView windDir = constraintLayouts.get(i).findViewById(R.id.wind_dir_text_one);
@@ -73,14 +77,6 @@ public class ThreeDayLargeFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
 
-        mViewModel = new ViewModelProvider(this).get(ThreeDayLargeViewModel.class);
-        mViewModel.getData().getValue().doWeatherTask();
-
-
-    }
 
 }

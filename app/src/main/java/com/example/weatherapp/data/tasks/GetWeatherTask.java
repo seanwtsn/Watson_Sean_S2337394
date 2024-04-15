@@ -3,6 +3,7 @@ package com.example.weatherapp.data.tasks;
 import android.os.Build;
 import android.util.Log;
 
+import com.example.weatherapp.WeatherParsedListener;
 import com.example.weatherapp.data.BasicWeather;
 import com.example.weatherapp.data.ExtendedWeather;
 import com.google.android.gms.maps.model.LatLng;
@@ -26,11 +27,13 @@ import java.util.regex.Pattern;
 
 public class GetWeatherTask implements Runnable
 {
-    public GetWeatherTask(String urlThree, String urlOne)
+    public GetWeatherTask(WeatherParsedListener weatherParsedListener, String urlThree, String urlOne)
     {
+        this.weatherParsedListener = weatherParsedListener;
         this.urlThree = urlThree;
         this.urlOne = urlOne;
     }
+    private WeatherParsedListener weatherParsedListener;
     private final String urlOne;
     private final String urlThree;
     private String oneDayResult;
@@ -419,6 +422,7 @@ public class GetWeatherTask implements Runnable
 
                 correctFirstDate();
 
+
             }
             catch (XmlPullParserException e)
             {
@@ -443,6 +447,8 @@ public class GetWeatherTask implements Runnable
                 threeDayWeatherExtended.get(0).setDay(threeDayWeatherExtended.get(1).getDay().minus(1));
             }
         }
+
+        weatherParsedListener.weatherSuccessfullyParsed(threeDayWeather, threeDayWeatherExtended, oneDayWeather);
     }
     private float valueFromString(String s){
 

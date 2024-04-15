@@ -7,12 +7,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.weatherapp.data.LocationRSS;
-import com.example.weatherapp.ui.fragments.ThreeDayLargeFragment;
-import com.example.weatherapp.ui.viewmodels.MainViewModel;
+import com.example.weatherapp.ui.viewmodels.WeatherViewModel;
 
 import java.util.ArrayList;
 
@@ -21,7 +19,7 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<WeatherRecy
 
     private String[] values;
     private String[] keys;
-    private final MainViewModel model;
+    private final WeatherViewModel model;
 
     private final View.OnClickListener holderOnClickerListener = new View.OnClickListener() {
         @Override
@@ -32,7 +30,7 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<WeatherRecy
     };
 
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
-    public WeatherRecyclerViewAdapter(ArrayList<LocationRSS> values, MainViewModel model)
+    public WeatherRecyclerViewAdapter(ArrayList<LocationRSS> values, WeatherViewModel model)
     {
         this.values = new String[values.size()];
         this.keys = new String[values.size()];
@@ -76,7 +74,7 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<WeatherRecy
         @Override
         public void onClick(View v )
         {
-            ((FragmentActivity)v.getContext()).getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView, new ThreeDayLargeFragment(rss)).commit();
+            //((FragmentActivity)v.getContext()).getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView, new ThreeDayLargeFragment(rss)).commit();
         }
 
         public ViewHolder(View view) {

@@ -21,15 +21,7 @@ public class ThreeDayLargeViewModel extends ViewModel
 
     public LiveData<MainModel> getData()
     {
-
-
-
         return model;
-    }
-
-    public void weather()
-    {
-        getData().getValue().doWeatherTask();
     }
     public ArrayList<BasicWeather> getThreeDaySimple()
     {

@@ -13,13 +13,13 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.weatherapp.ui.viewmodels.MainViewModel;
 import com.example.weatherapp.R;
 import com.example.weatherapp.WeatherRecyclerViewAdapter;
+import com.example.weatherapp.ui.viewmodels.WeatherViewModel;
 
 public class WeatherFragment extends Fragment {
 
-    private MainViewModel viewModel;
+    private WeatherViewModel viewModel;
     public WeatherFragment()
     {
 
@@ -27,7 +27,7 @@ public class WeatherFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
 
     }
 
@@ -37,13 +37,13 @@ public class WeatherFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_weather_item_list, container, false);
 
-        viewModel.getData().observe(getViewLifecycleOwner(), mainModel -> {
+        viewModel.getList().observe(getViewLifecycleOwner(), mainModel -> {
 
             if (view instanceof RecyclerView) {
                 Context context = view.getContext();
                 RecyclerView recyclerView = (RecyclerView) view;
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
-                recyclerView.setAdapter(new WeatherRecyclerViewAdapter(viewModel.getLocationFromName(), viewModel));
+                recyclerView.setAdapter(new WeatherRecyclerViewAdapter(viewModel.getList().getValue(), viewModel));
             }
         });
 
