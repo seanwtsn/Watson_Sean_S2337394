@@ -3,12 +3,13 @@ package com.example.weatherapp.ui.viewmodels;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.viewmodel.ViewModelInitializer;
 
 import com.example.weatherapp.data.ExtendedWeather;
 import com.example.weatherapp.models.MainModel;
 
 public class MainFragmentViewModel extends ViewModel {
-    private final MainModel model;
+    private MainModel model;
     public MutableLiveData<ExtendedWeather> weatherMutableLiveData = new MutableLiveData<>();
     public LiveData<ExtendedWeather> retrieveWeather()
     {
@@ -19,14 +20,22 @@ public class MainFragmentViewModel extends ViewModel {
     {
         weatherMutableLiveData.setValue(extendedWeather);
     }
-    public MainFragmentViewModel()
+    public MainFragmentViewModel(MainModel model)
     {
-        model = MainModel.getModelInstance();
+        this.model = model;
 
-        if(model.getOneDayExtended() != null)
+        if(this.model.getOneDayExtended() != null)
         {
             setWeather(model.getOneDayExtended());
         }
     }
+
+    public static final ViewModelInitializer<MainFragmentViewModel> initializer = new ViewModelInitializer<>(MainFragmentViewModel.class, creationExtras -> {
+
+        MainModel model = MainModel.getModelInstance();
+        assert model != null;
+        return new MainFragmentViewModel(model);
+
+    });
 
 }

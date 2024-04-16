@@ -19,8 +19,6 @@ import com.example.weatherapp.ui.viewmodels.MainFragmentViewModel;
 public class MainFragment extends Fragment {
 
     private FragmentMainViewBinding binding;
-
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -31,7 +29,7 @@ public class MainFragment extends Fragment {
         TextView temperatureText = binding.temperatureOneDayText;
         TextView conditionsText = binding.mainConditionsText;
 
-        MainFragmentViewModel mainViewModel = new ViewModelProvider(this).get(MainFragmentViewModel.class);
+        MainFragmentViewModel mainViewModel = new ViewModelProvider(this, ViewModelProvider.Factory.from(MainFragmentViewModel.initializer)).get(MainFragmentViewModel.class);
 
         Observer<ExtendedWeather> condition = extendedWeather -> {
             Log.d("VMOC", extendedWeather.getConditions());
@@ -41,7 +39,6 @@ public class MainFragment extends Fragment {
             StringBuilder sb = new StringBuilder();
 
             sb.append((int)extendedWeather.getCurrentTemperature()).append("°C");
-
 
             conditionsText.setText(extendedWeather.getConditions());
             temperatureText.setText(sb.toString());
@@ -54,7 +51,7 @@ public class MainFragment extends Fragment {
     }
 
 
-
+    //TODO: FIGURE OUT THE DATA OBSERVING THING, ONLY BEING TRIGGER AT INACTIVE
 
     @Override
     public void onDestroyView() {

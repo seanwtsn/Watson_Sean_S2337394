@@ -20,6 +20,7 @@ public class WeatherIconHelper
         switch (weather)
         {
             case "sunny intervals":
+            case "clear sky":
                 return R.drawable.icon_sun_norays;
             case "light rain showers":
             case "light rain":
@@ -29,9 +30,8 @@ public class WeatherIconHelper
             case "drizzle":
             case "heavy rain":
                 return R.drawable.cloud_heavy_rain;
-            case "clear sky":
-                return R.drawable.icon_sun_norays;
-
+            case "light cloud":
+                return R.drawable.icon_cloud;
         }
 
 

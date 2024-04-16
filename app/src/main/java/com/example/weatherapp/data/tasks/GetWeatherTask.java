@@ -322,24 +322,23 @@ public class GetWeatherTask implements Runnable
                 {
 
                     if(eventType == pullParser.START_TAG) {
-                        //TODO: Implement all the tags in the 3 Day, and create separate conditions depending on what we need.
+
                         String temp;
                         switch (pullParser.getName())
                         {
                             case "title":
                                 eventType = pullParser.next();
+
                                 if(eventType == XmlPullParser.TEXT)
                                 {
                                     temp = pullParser.getText();
                                     if(temp != null && temp.contains("Minimum"))
                                     {
+                                        Log.d("TC", "Title" );
                                         String[] titleSplit = temp.split(":");
                                         conditions = titleSplit[1].split(",")[0].trim();
                                         day = titleSplit[0].trim().toUpperCase();
-                                        if(day.equalsIgnoreCase("tonight"))
-                                        {
-                                            day = null;
-                                        }
+
 
 
 
@@ -349,6 +348,7 @@ public class GetWeatherTask implements Runnable
 
                                         String[] locSplit = temp.split("-");
                                         locName = locSplit[1].split(" ")[4];
+                                        oneDayWeather.setLocationName(locName);
                                     }
                                 }
 
@@ -358,51 +358,118 @@ public class GetWeatherTask implements Runnable
                                 if(eventType == XmlPullParser.TEXT)
                                 {
                                     temp = pullParser.getText();
-                                    if(temp != null && temp.contains("Maximum")) {
+                                    if(temp != null && temp.contains("Wind")) {
                                         Log.d("TC", "Description" );
                                         String[] strSplit = temp.split(",");
+                                        for (int i = 0; i < strSplit.length; i++) {
+                                            Log.d("WTAF", strSplit[i].split(":")[0]);
+                                        }
 
-                                        maxTemp = valueFromString(strSplit[0]);
-                                        minTemp = valueFromString(strSplit[1]);
-                                        windDir = strSplit[2].split(":")[1].trim();
-
-                                        if(Objects.equals(strSplit[3].split(":")[1].trim(), "--"))
+                                        Log.d("WTAF", Boolean.toString(strSplit[0].split(":")[0].equalsIgnoreCase("Maximum Temperature")));
+                                        //So, sometimes, the returned weather doesn't have a maximum, so we need to do this :/
+                                        if(strSplit[0].split(":")[0].equalsIgnoreCase("Maximum Temperature"))
                                         {
-                                            windSpeed = Float.NaN;
+                                            maxTemp = valueFromString(strSplit[0]);
+                                            minTemp = valueFromString(strSplit[1]);
+                                            windDir = strSplit[2].split(":")[1].trim();
+
+                                            if(Objects.equals(strSplit[3].split(":")[1].trim(), "--"))
+                                            {
+                                                windSpeed = Float.NaN;
+                                            }
+                                            else
+                                            {
+                                                windSpeed = Float.parseFloat(strSplit[3].split(":")[1].replace("mph", "").trim()); //I legitimately lost passion for life writing this
+                                            }
+
+                                            visibility = strSplit[4].split(":")[1].trim();
+
+                                            if(Objects.equals(strSplit[5].split(":")[1].trim(),"--"))
+                                            {
+                                                pressure = Float.NaN;
+                                            }
+                                            else
+                                            {
+                                                pressure = Float.parseFloat(strSplit[5].split(":")[1].replace("mb", "").trim());
+                                            }
+
+                                            if(Objects.equals(strSplit[6].split(":")[1].trim(),"--"))
+                                            {
+                                                humidity = Float.NaN;
+                                            }
+                                            else
+                                            {
+                                                humidity = Float.parseFloat(strSplit[6].split(":")[1].replace("%","").trim());
+                                            }
+
+                                            if(Objects.equals(strSplit[7].split(":")[1].trim(),"--"))
+                                            {
+                                                uvRisk = Integer.MAX_VALUE;
+                                            }
+                                            else
+                                            {
+                                                uvRisk = Integer.parseInt(strSplit[7].split(":")[1].trim());
+                                            }
+
+                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+                                                sunrise = LocalTime.parse(strSplit[9].substring(10, 15).trim());
+                                                sunset = LocalTime.parse(strSplit[10].substring(9, 14).trim());
+                                            }
                                         }
                                         else
                                         {
-                                            windSpeed = Float.parseFloat(strSplit[3].split(":")[1].replace("mph", "").trim()); //I legitimately lost passion for life writing this
+                                            maxTemp = Float.NEGATIVE_INFINITY;
+                                            minTemp = valueFromString(strSplit[0]);
+                                            windDir = strSplit[1].split(":")[1].trim();
+
+                                            if(Objects.equals(strSplit[2].split(":")[1].trim(), "--"))
+                                            {
+                                                windSpeed = Float.NaN;
+                                            }
+                                            else
+                                            {
+                                                windSpeed = Float.parseFloat(strSplit[2].split(":")[1].replace("mph", "").trim()); //I legitimately lost passion for life writing this
+                                            }
+
+                                            visibility = strSplit[3].split(":")[1].trim();
+
+                                            if(Objects.equals(strSplit[4].split(":")[1].trim(),"--"))
+                                            {
+                                                pressure = Float.NaN;
+                                            }
+                                            else
+                                            {
+                                                pressure = Float.parseFloat(strSplit[4].split(":")[1].replace("mb", "").trim());
+                                            }
+
+                                            if(Objects.equals(strSplit[5].split(":")[1].trim(),"--"))
+                                            {
+                                                humidity = Float.NaN;
+                                            }
+                                            else
+                                            {
+                                                humidity = Float.parseFloat(strSplit[5].split(":")[1].replace("%","").trim());
+                                            }
+
+                                            if(Objects.equals(strSplit[6].split(":")[1].trim(),"--"))
+                                            {
+                                                uvRisk = Integer.MAX_VALUE;
+                                            }
+                                            else
+                                            {
+                                                uvRisk = Integer.parseInt(strSplit[6].split(":")[1].trim());
+                                            }
+
+                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+                                                sunrise = null;
+                                                sunset = LocalTime.parse(strSplit[8].substring(9, 14).trim());
+                                            }
                                         }
 
-                                        visibility = strSplit[4].split(":")[1].trim();
 
-                                        if(Objects.equals(strSplit[5].split(":")[1].trim(),"--"))
-                                        {
-                                            pressure = Float.NaN;
-                                        }
-                                        else
-                                        {
-                                            pressure = Float.parseFloat(strSplit[5].split(":")[1].replace("mb", "").trim());
-                                        }
-
-                                        if(Objects.equals(strSplit[6].split(":")[1].trim(),"--"))
-                                        {
-                                            humidity = Float.NaN;
-                                        }
-                                        else
-                                        {
-                                            humidity = Float.parseFloat(strSplit[6].split(":")[1].replace("%","").trim());
-                                        }
-
-                                        if(Objects.equals(strSplit[7].split(":")[1].trim(),"--"))
-                                        {
-                                            uvRisk = Integer.MAX_VALUE;
-                                        }
-                                        else
-                                        {
-                                            uvRisk = Integer.parseInt(strSplit[7].split(":")[1].trim());
-                                        }
+                                        Log.d("TC", day);
 
                                         if (Objects.equals(day, "TODAY") || Objects.equals(day, "TONIGHT") )
                                         {
@@ -427,11 +494,7 @@ public class GetWeatherTask implements Runnable
 
                                         }
 
-                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
-                                            sunrise = LocalTime.parse(strSplit[9].substring(10, 15).trim());
-                                            sunset = LocalTime.parse(strSplit[10].substring(9, 14).trim());
-                                        }
 
 
 

@@ -1,6 +1,7 @@
 package com.example.weatherapp;
 
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
 
@@ -23,6 +24,7 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 
@@ -40,6 +42,25 @@ public class MainActivity extends AppCompatActivity {
         public void onLocationResult(@NonNull LocationResult locationResult) {
             super.onLocationResult(locationResult);
 
+            Location location = locationResult.getLocations().get(locationResult.getLocations().size() - 1);
+
+            if (location != null) {
+                //currentPos = new LatLng(location.getLatitude(), location.getLongitude());
+                currentPos = new LatLng(51.509865, -0.118092);
+                rss = mm.getRSSKeyFromLocation(currentPos);
+                mm.doWeatherTask(rss);
+
+                //mm.doWeatherTask(mm.getRSSKeyFromLocation(currentPos));
+
+
+            } else {
+                //defaults to London
+                rss = "2643743";
+                mm.doWeatherTask(rss);
+                //mm.doWeatherTask(mm.getRSSKeyFromLocation(currentPos));
+
+
+            }
 
         }
 
@@ -51,25 +72,34 @@ public class MainActivity extends AppCompatActivity {
     };
 
     private FusedLocationProviderClient fusedLocationProviderClient;
-    @Override
-    public void onResume()
-    {
-        super.onResume();
 
+    private final LocationRequest locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 4000)
+            .setWaitForAccurateLocation(false).setMinUpdateIntervalMillis(LocationRequest.Builder.IMPLICIT_MIN_UPDATE_INTERVAL).setMaxUpdateDelayMillis(1).build();
+
+    @Override
+    public void onResume() {
+        super.onResume();
 
     }
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         super.onPause();
         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
     }
 
+    @Override
+    public void onDestroy() {
+
+        super.onDestroy();
+        fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         mm.getLocationRSS(getApplicationContext());
 
@@ -77,53 +107,33 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(binding.getRoot());
 
-        LocationRequest locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 2500)
-                .setWaitForAccurateLocation(false).setMinUpdateIntervalMillis(LocationRequest.Builder.IMPLICIT_MIN_UPDATE_INTERVAL).setMaxUpdateDelayMillis(1).build();
-
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
-
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST);
             return;
         }
 
-        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
-
-        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, location -> {
-            if(location != null)
-            {
-                //currentPos = new LatLng(location.getLatitude(), location.getLongitude());
-                currentPos = new LatLng(51.509865,-0.118092);
-                rss = mm.getRSSKeyFromLocation(currentPos);
-                mm.doWeatherTask(rss);
-
-                //mm.doWeatherTask(mm.getRSSKeyFromLocation(currentPos));
-
-
-            }
-            else
-            {
-                //defaults to London
-                rss = "2643743";
-                mm.doWeatherTask(rss);
-                //mm.doWeatherTask(mm.getRSSKeyFromLocation(currentPos));
-
-
-            }
-        });
-
-
-
-
-
 
     }
+
+    public void startingLocation() {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                rss = mm.getRSSKeyFromLocation(new LatLng(location.getLatitude(), location.getLongitude()));
+                mm.doWeatherTask(rss);
+            }
+        });
+    }
+
     public void onStart() {
         super.onStart();
-        ArrayList<LocationRSS> locationRSS = new ArrayList<LocationRSS>()
-        {
+
+
+        ArrayList<LocationRSS> locationRSS = new ArrayList<LocationRSS>() {
             {
                 add(new LocationRSS("London", "UK", new LatLng(51.509865, -0.118092), "2643743"));
                 add(new LocationRSS("Edinburgh", "UK", new LatLng(55.953251, -3.188267), "2650225"));
@@ -134,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
                 add(new LocationRSS("Cardiff", "UK", new LatLng(51.481583, -3.179090), "2653822"));
                 add(new LocationRSS("Irvine", "UK", new LatLng(55.61156690, -4.66963640), "2646032"));
                 add(new LocationRSS("Kilwinning", "UK", new LatLng(55.65333, -4.70666), "2645541"));
+
             }
         };
 
@@ -151,6 +162,13 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.frag_three, oneDayFragment, "two").commit();
 
         getSupportFragmentManager().executePendingTransactions();
+
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
+
+        startingLocation();
 
     }
 

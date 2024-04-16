@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.example.weatherapp.R;
 import com.example.weatherapp.data.BasicWeather;
@@ -28,7 +28,7 @@ public class ThreeDaySmallFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        viewModel = new ViewModelProvider(this).get(ThreeDaySmallViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(ThreeDaySmallViewModel.class);
 
         ArrayList<TextView> temperatureView;
         ArrayList<TextView> dayView;
@@ -98,12 +98,22 @@ public class ThreeDaySmallFragment extends Fragment {
 
                 for(int i = 0; i < basicWeathers.size(); i++)
                 {
+
+
+
+
                     String s = basicWeathers.get(i).getDay().toString().substring(0,1).toUpperCase() + basicWeathers.get(i).getDay().toString().substring(1).split("DAY")[0].toLowerCase();
                     dayView.get(i).setText(s);
                     StringBuilder sb = new StringBuilder();
-                    sb.append(((int)basicWeathers.get(i).getHighTemperature()));
-                    sb.append("°C");
-                    sb.append("/");
+                    String h;
+
+                    if(basicWeathers.get(i).getHighTemperature() != Float.NEGATIVE_INFINITY)
+                    {
+                        h = String.valueOf((int)basicWeathers.get(i).getHighTemperature());
+                        sb.append(h);
+                        sb.append("/");
+                    }
+
                     sb.append(((int)basicWeathers.get(i).getLowTemperature()));
                     sb.append("°C");
                     temperatureView.get(i).setText(sb.toString());

@@ -29,13 +29,11 @@ public class MainModel implements WeatherParsedListener, FileReadCallBack {
         }
         return modelInstance;
     }
-
-
-
     private ExtendedWeather oneDayExtended;
     private ArrayList<BasicWeather> threeDay;
     private ArrayList<ExtendedWeather> threeDayExtended;
     private ArrayList<LocationRSS> locationRSS;
+
     public MainModel()
     {
 
@@ -134,10 +132,6 @@ public class MainModel implements WeatherParsedListener, FileReadCallBack {
     }
     public String getRSSKeyFromLocation(LatLng location)
     {
-        Log.d("LRSS", String.valueOf(locationRSS.size()));
-        Log.d("LRSS", String.valueOf(location.latitude));
-        Log.d("LRSS", String.valueOf(locationRSS.get(0).getPosition()));
-
         if(locationRSS != null)
         {
             ReturnClosestLocationHelper closestLocationHelper = new ReturnClosestLocationHelper();

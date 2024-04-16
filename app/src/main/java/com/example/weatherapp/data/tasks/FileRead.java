@@ -98,7 +98,7 @@ public class FileRead implements Runnable
         {
             try {
                 FileWriter fileWriter = new FileWriter(file);
-                fileWriter.write("{}");
+                fileWriter.write("{\"locations\":[{\"name\":\"London\",\"countryCode\":\"UK\",\"position\":\"51.509865,-0.118092\",\"rssKey\":\"2643743\"},{\"name\":\"Belfast\",\"countryCode\":\"UK\",\"position\":\"54.607868,-5.926437\",\"rssKey\":\"2655984\"},{\"name\":\"Manchester\",\"countryCode\":\"UK\",\"position\":\"53.483959,-2.244644\",\"rssKey\":\"2643123\"},{\"name\":\"Hull\",\"countryCode\":\"UK\",\"position\":\"53.76775,-0.335827\",\"rssKey\":\"2645425\"}]}\"}]}");
                 fileWriter.flush();
                 fileWriter.close();
 
