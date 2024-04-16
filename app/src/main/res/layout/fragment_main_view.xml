@@ -50,5 +50,35 @@
 
 
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/main_scroll_view"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            >
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/threedayfragmentContainerView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:name="com.example.weatherapp.ui.fragments.ThreeDaySmallFragment" />
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/onedayfragmentContainerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:name="com.example.weatherapp.ui.fragments.OneDayFragment" />
+
+
+
+        </LinearLayout>
+
+
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
