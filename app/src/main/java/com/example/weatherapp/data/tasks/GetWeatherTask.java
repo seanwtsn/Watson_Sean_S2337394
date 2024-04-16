@@ -33,7 +33,7 @@ public class GetWeatherTask implements Runnable
         this.urlThree = urlThree;
         this.urlOne = urlOne;
     }
-    private WeatherParsedListener weatherParsedListener;
+    private final WeatherParsedListener weatherParsedListener;
     private final String urlOne;
     private final String urlThree;
     private String oneDayResult;
@@ -51,25 +51,7 @@ public class GetWeatherTask implements Runnable
         getOneDayXML();
         getThreeDayXML();
     }
-    public ArrayList<BasicWeather> returnThreeDayWeather() {
-        return threeDayWeather;
-    }
-
-    public ArrayList<ExtendedWeather> returnThreeDayWeatherExtended()
-    {
-        return threeDayWeatherExtended;
-    }
-
-    public ExtendedWeather returnOneDayWeatherSimple()
-    {
-        return oneDayWeather;
-    }
-
-    public ExtendedWeather returnOneDayWeatherExtended()
-    {
-        return OneDayWeatherExtended;
-    }
-    private ExtendedWeather createDetailedOneDay()
+    private void createDetailedOneDay()
     {
         if(oneDayWeather != null)
         {
@@ -84,14 +66,13 @@ public class GetWeatherTask implements Runnable
                 OneDayWeatherExtended.setSunset(oneDayData.getSunset());
             }
 
-            return OneDayWeatherExtended;
+            Log.d("1D", "oneDayData = Called");
+
         }
         else
         {
             Log.d("ERROR", "oneDayData = Null");
         }
-
-        return null;
 
     }
 
@@ -147,12 +128,13 @@ public class GetWeatherTask implements Runnable
             in = new BufferedReader(new InputStreamReader((_url.getInputStream())));
             while((inputLine = in.readLine()) != null){
                 oneDayResult = oneDayResult + inputLine;
+                Log.d("1D TEST", inputLine);
             }
             in.close();
         }
         catch (IOException e)
         {
-
+            e.printStackTrace();
         }
         int i = oneDayResult.indexOf(">");
         oneDayResult = oneDayResult.substring(i+1);
@@ -180,7 +162,7 @@ public class GetWeatherTask implements Runnable
         }
         catch (IOException e)
         {
-
+            e.printStackTrace();
         }
         int i = threeDayResult.indexOf(">");
         threeDayResult = threeDayResult.substring(i+1);
@@ -238,9 +220,40 @@ public class GetWeatherTask implements Runnable
                                         currentTemperature = valueFromString(desSplit[0].split(":")[1]);
                                         windDir = desSplit[1].split(":")[1].trim();
 
-                                        windSpeed = Float.parseFloat(desSplit[2].split(":")[1].replace("mph", "").trim()); //Really don't want to know the performance overhead on this.
-                                        pressure = Float.parseFloat(desSplit[4].split(":")[1].replace("mb", "").trim()); //There it is again
-                                        humidity = Float.parseFloat(desSplit[3].split(":")[1].replace("%", "").trim()); //There it is again
+
+                                        //Error Handling just in case the XML produces garbage, which is occasionally does.
+                                        if(Objects.equals(desSplit[2].split(":")[1].trim(), "--"))
+                                        {
+                                            windSpeed = Float.parseFloat(desSplit[2].split(":")[1].replace("mph", "").trim());
+
+                                        }
+                                        else
+                                        {
+                                            windSpeed = Float.NaN; //Really don't want to know the performance overhead on this.
+                                        }
+
+                                        if(Objects.equals(desSplit[4].split(":")[1].trim(),"--"))
+                                        {
+                                            pressure = Float.parseFloat(desSplit[4].split(":")[1].replace("mb", "").trim()); //There it is again
+
+                                        }
+                                        else
+                                        {
+                                            pressure = Float.NaN;
+                                        }
+
+                                        if(Objects.equals(desSplit[3].split(":")[1].trim(),"--"))
+                                        {
+                                            humidity = Float.parseFloat(desSplit[3].split(":")[1].replace("%", "").trim()); //There it is again
+
+                                        }
+                                        else
+                                        {
+                                            humidity = Float.NaN;
+
+                                        }
+
+
                                         visibility = desSplit[6].split(":")[1]; //Evidently, this can produce garbage, so probably should handle it.
 
                                     }
@@ -257,6 +270,8 @@ public class GetWeatherTask implements Runnable
 
                     eventType = pullParser.next();
                 }
+
+
 
                 oneDayWeather = new ExtendedWeather(locName, null, currentTemperature,
                         day, highTemperature, lowTemperature, windSpeed, windDir,
@@ -350,11 +365,44 @@ public class GetWeatherTask implements Runnable
                                         maxTemp = valueFromString(strSplit[0]);
                                         minTemp = valueFromString(strSplit[1]);
                                         windDir = strSplit[2].split(":")[1].trim();
-                                        windSpeed = Float.parseFloat(strSplit[3].split(":")[1].replace("mph", "").trim()); //I legitimately lost passion for life writing this
+
+                                        if(Objects.equals(strSplit[3].split(":")[1].trim(), "--"))
+                                        {
+                                            windSpeed = Float.NaN;
+                                        }
+                                        else
+                                        {
+                                            windSpeed = Float.parseFloat(strSplit[3].split(":")[1].replace("mph", "").trim()); //I legitimately lost passion for life writing this
+                                        }
+
                                         visibility = strSplit[4].split(":")[1].trim();
-                                        pressure = Float.parseFloat(strSplit[5].split(":")[1].replace("mb", "").trim());
-                                        humidity = Float.parseFloat(strSplit[6].split(":")[1].replace("%","").trim());
-                                        uvRisk = Integer.parseInt(strSplit[7].split(":")[1].trim());
+
+                                        if(Objects.equals(strSplit[5].split(":")[1].trim(),"--"))
+                                        {
+                                            pressure = Float.NaN;
+                                        }
+                                        else
+                                        {
+                                            pressure = Float.parseFloat(strSplit[5].split(":")[1].replace("mb", "").trim());
+                                        }
+
+                                        if(Objects.equals(strSplit[6].split(":")[1].trim(),"--"))
+                                        {
+                                            humidity = Float.NaN;
+                                        }
+                                        else
+                                        {
+                                            humidity = Float.parseFloat(strSplit[6].split(":")[1].replace("%","").trim());
+                                        }
+
+                                        if(Objects.equals(strSplit[7].split(":")[1].trim(),"--"))
+                                        {
+                                            uvRisk = Integer.MAX_VALUE;
+                                        }
+                                        else
+                                        {
+                                            uvRisk = Integer.parseInt(strSplit[7].split(":")[1].trim());
+                                        }
 
                                         if (Objects.equals(day, "TODAY") || Objects.equals(day, "TONIGHT") )
                                         {
@@ -413,12 +461,11 @@ public class GetWeatherTask implements Runnable
                 threeDayWeather = weather;
                 threeDayWeatherExtended = weatherExtended;
 
-                for (int i = 0; i < threeDayWeather.size(); i++)
-                {
+                for (int i = 0; i < threeDayWeather.size(); i++) {
                     Log.d("Testing", Float.toString(threeDayWeather.get(i).getHighTemperature()));
                 }
 
-                //TODO PARSER BUSTED FUCKING FIX
+
 
                 correctFirstDate();
 

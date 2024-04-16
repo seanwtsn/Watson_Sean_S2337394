@@ -2,6 +2,7 @@ package com.example.weatherapp.data.tasks;
 
 import android.content.Context;
 
+import com.example.weatherapp.FileReadCallBack;
 import com.example.weatherapp.data.LocationRSS;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -20,26 +21,28 @@ import java.util.ArrayList;
 public class FileRead implements Runnable
 {
     //write alarm to file
-    private ArrayList<LocationRSS> locations;
+    private final FileReadCallBack fileReadCallBack;
     private static final String filename = "locations.json";
-    private Context context;
-    public FileRead (Context context){
-        this.context = context;
+    private final Context context;
+    public FileRead (FileReadCallBack fileReadCallBack, Context context){
 
+        this.fileReadCallBack = fileReadCallBack;
+        this.context = context;
     }
     @Override
     public void run() {
-        locations = loadLocations();
+        loadLocations();
     }
 
-    private ArrayList<LocationRSS> loadLocations(){
+    private void loadLocations(){
+        ArrayList<LocationRSS> locations = null;
         try
         {
             if(LoadJSON() != null || !LoadJSON().isEmpty())
             {
                 JSONObject obj = new JSONObject(LoadJSON());
                 JSONArray locationArray = obj.getJSONArray("locations");
-                locations = new ArrayList<LocationRSS>();
+                locations = new ArrayList<>();
                 for(int i = 0; i < locationArray.length(); i++)
                 {
                     JSONObject location = locationArray.getJSONObject(i);
@@ -55,12 +58,13 @@ public class FileRead implements Runnable
                 }
             }
 
+            fileReadCallBack.fileReadSuccessful(locations);
         }
         catch (JSONException e)
         {
             e.printStackTrace();
         }
-        return locations;
+        
     }
 
     private LatLng stringToLatLng(String data){
@@ -73,11 +77,11 @@ public class FileRead implements Runnable
 
 
     public String LoadJSON() {
-        String json = null;
+        String json;
         File fileDir = context.getFilesDir();
         File file = new File(fileDir, filename);
         if (file.exists()) {
-            FileInputStream fileInputStream = null;
+            FileInputStream fileInputStream;
             try {
                 fileInputStream = new FileInputStream(file);
                 int size = fileInputStream.available();
@@ -106,10 +110,7 @@ public class FileRead implements Runnable
     }
 
 
-    public ArrayList<LocationRSS> getLocations()
-    {
-        return locations;
-    }
+
 
 
 

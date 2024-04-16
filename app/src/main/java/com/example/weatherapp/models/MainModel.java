@@ -4,6 +4,7 @@ package com.example.weatherapp.models;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.weatherapp.FileReadCallBack;
 import com.example.weatherapp.WeatherParsedListener;
 import com.example.weatherapp.data.BasicWeather;
 import com.example.weatherapp.data.ExtendedWeather;
@@ -15,7 +16,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 
-public class MainModel implements WeatherParsedListener {
+public class MainModel implements WeatherParsedListener, FileReadCallBack {
 
     //Yes im using a singleton pattern and yes I hate it.
     private static MainModel modelInstance;
@@ -30,21 +31,17 @@ public class MainModel implements WeatherParsedListener {
     }
 
 
-    private BasicWeather oneDay;
+
     private ExtendedWeather oneDayExtended;
     private ArrayList<BasicWeather> threeDay;
     private ArrayList<ExtendedWeather> threeDayExtended;
     private ArrayList<LocationRSS> locationRSS;
-    private String currentRSSkey;
-
     public MainModel()
     {
 
     }
-
     public void doWeatherTask(String rss)
     {
-        currentRSSkey = rss;
         getWeather(rss);
     }
 
@@ -77,12 +74,6 @@ public class MainModel implements WeatherParsedListener {
 
     private String constructRSSURL(String key, boolean isOneDay)
     {
-        if(key == null || key.isEmpty())
-        {
-            key = "2648579";
-        }
-
-        Log.d("RSS", key);
         StringBuilder sb = new StringBuilder();
         if(isOneDay)
         {
@@ -90,7 +81,7 @@ public class MainModel implements WeatherParsedListener {
             sb.append("https://weather-broker-cdn.api.bbci.co.uk/en/observation/rss/")
                     .append(key);
 
-            Log.d("RSS", sb.toString());
+
 
             return sb.toString();
 
@@ -111,26 +102,20 @@ public class MainModel implements WeatherParsedListener {
         Thread data = new Thread(getWeatherTask);
         data.start();
     }
+    public void getLocationRSS(Context context)
+    {
+        FileRead fileRead = new FileRead(this, context);
+        Thread t = new Thread(fileRead);
+        t.start();
+    }
 
-    private boolean isOneDayParsed;
-
-    public ArrayList<LocationRSS> getLocationRSS(Context context) {
-        if(locationRSS != null)
+    public ArrayList<LocationRSS> getLocationRSS()
+    {
+        if(locationRSS != null || !locationRSS.isEmpty())
         {
             return locationRSS;
         }
-        else
-        {
-            FileRead fileRead = new FileRead(context);
-            Thread t = new Thread(fileRead);
-            t.start();
-            try {
-                t.join();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            return fileRead.getLocations();
-        }
+        return null;
     }
 
     public ExtendedWeather getOneDayExtended()
@@ -147,44 +132,30 @@ public class MainModel implements WeatherParsedListener {
     {
         return threeDayExtended;
     }
-    public void setLocationRSS(ArrayList<LocationRSS> locationRSS)
-    {
-        this.locationRSS = locationRSS;
-    }
-
     public String getRSSKeyFromLocation(LatLng location)
     {
-        ReturnClosestLocationHelper closestLocationHelper = new ReturnClosestLocationHelper();
-        double temp = 1f;
-        int index = 0;
+        Log.d("LRSS", String.valueOf(locationRSS.size()));
+        Log.d("LRSS", String.valueOf(location.latitude));
+        Log.d("LRSS", String.valueOf(locationRSS.get(0).getPosition()));
 
-        if(!locationRSS.isEmpty())
+        if(locationRSS != null)
         {
-            for (int i = 0; i < locationRSS.size(); i++)
-            {
-                if(closestLocationHelper.getDistance(location, locationRSS.get(i).getPosition()) < temp)
-                {
+            ReturnClosestLocationHelper closestLocationHelper = new ReturnClosestLocationHelper();
+            double temp = 1f;
+            int index = 0;
+
+            for (int i = 0; i < locationRSS.size(); i++) {
+                if (closestLocationHelper.getDistance(location, locationRSS.get(i).getPosition()) < temp) {
                     temp = closestLocationHelper.getDistance(location, locationRSS.get(i).getPosition());
                     index = i;
                 }
 
             }
+            return locationRSS.get(index).getRssKey();
         }
 
-        return locationRSS.get(index).getRssKey();
+        return "2648579";
     }
-
-
-    public String getCurrentRSSkey() {
-        return currentRSSkey;
-    }
-
-    public void setCurrentRSSkey(String currentRSSkey)
-    {
-        this.currentRSSkey = currentRSSkey;
-    }
-
-
     @Override
     public void weatherSuccessfullyParsed(ArrayList<BasicWeather> threeDayBasic, ArrayList<ExtendedWeather> threeDayExtended, ExtendedWeather oneDayExtended)
     {
@@ -197,5 +168,11 @@ public class MainModel implements WeatherParsedListener {
     public void weatherUnsuccessfullyParsed()
     {
 
+    }
+    @Override
+    public void fileReadSuccessful(ArrayList<LocationRSS> list)
+    {
+        locationRSS = list;
+        Log.d("RSS FR", "fileReadSuccessfully");
     }
 }

@@ -13,9 +13,8 @@ import java.util.ArrayList;
 
 public class WeatherViewModel extends AndroidViewModel
 {
-    private MutableLiveData<ArrayList<LocationRSS>> listMutableLiveData;
+    private MutableLiveData<ArrayList<LocationRSS>> listMutableLiveData = new MutableLiveData<>();
 
-    private final MainModel model;
     public LiveData<ArrayList<LocationRSS>> getList()
     {
         return listMutableLiveData;
@@ -29,10 +28,10 @@ public class WeatherViewModel extends AndroidViewModel
     public WeatherViewModel(Application application)
     {
         super(application);
-        model = MainModel.getModelInstance();
-        if(model.getLocationRSS(application.getApplicationContext()) != null)
+        MainModel model = MainModel.getModelInstance();
+        if(model.getLocationRSS() != null)
         {
-            setListMutableLiveData(model.getLocationRSS(application.getApplicationContext()));
+            setListMutableLiveData(model.getLocationRSS());
         }
     }
 }
