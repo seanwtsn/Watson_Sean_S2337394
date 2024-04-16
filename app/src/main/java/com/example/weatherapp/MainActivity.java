@@ -3,9 +3,6 @@ package com.example.weatherapp;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -47,7 +44,9 @@ public class MainActivity extends AppCompatActivity {
 
         mm.doWeatherTask("2648579");
 
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+
+        setContentView(binding.getRoot());
 
         ReturnClosestLocationHelper returnClosestLocationHelper = new ReturnClosestLocationHelper();
 
@@ -84,19 +83,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
 
-        Button _button = binding.TEST;
-
-        _button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
-            {
-
-                Log.d("MAVM", "onClick");
-            }
-        });
 
 
 
