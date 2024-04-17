@@ -28,6 +28,8 @@ public class ThreeDaySmallViewModel extends ViewModel
     {
         model = MainModel.getModelInstance();
 
+        threeDaySmallMuteData = (MutableLiveData<ArrayList<BasicWeather>>) model.getThreeDayData();
+
         if(model.getThreeDay() != null)
         {
             setThreeDaySmallData(model.getThreeDay());

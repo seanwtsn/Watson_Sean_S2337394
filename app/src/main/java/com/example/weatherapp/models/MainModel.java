@@ -4,6 +4,9 @@ package com.example.weatherapp.models;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 import com.example.weatherapp.data.BasicWeather;
 import com.example.weatherapp.data.ExtendedWeather;
 import com.example.weatherapp.data.LocationRSS;
@@ -153,6 +156,10 @@ public class MainModel implements WeatherParsedListener, FileReadCallBack {
         this.threeDay = threeDayBasic;
         this.oneDayExtended = oneDayExtended;
 
+        updateThreeDayData(threeDayBasic);
+        updateOneDayExtended(oneDayExtended);
+        updateThreeDayDataExtended(threeDayExtended);
+
         //For some silly reason, the parser doesn't like retrieving conditions, so we do it here.
         oneDayExtended.setConditions(threeDayBasic.get(0).getConditions());
 
@@ -161,6 +168,36 @@ public class MainModel implements WeatherParsedListener, FileReadCallBack {
 
     }
 
+    private MutableLiveData<ExtendedWeather> oneDayDataExtended = new MutableLiveData<>();
+    private void updateOneDayExtended(ExtendedWeather weather)
+    {
+        oneDayDataExtended.postValue(weather);
+    }
+
+    private MutableLiveData<ArrayList<ExtendedWeather>> threeDayDataExtended = new MutableLiveData<>();
+    private void updateThreeDayDataExtended(ArrayList<ExtendedWeather> weathers)
+    {
+        threeDayDataExtended.postValue(weathers);
+    }
+    private MutableLiveData<ArrayList<BasicWeather>> threeDayData = new MutableLiveData<>();
+
+    private void updateThreeDayData(ArrayList<BasicWeather> weathers)
+    {
+        threeDayData.postValue(weathers);
+    }
+
+    public LiveData<ExtendedWeather> getOneDayDataExtended()
+    {
+        return oneDayDataExtended;
+    }
+    public LiveData<ArrayList<ExtendedWeather>> getThreeDayDataExtended()
+    {
+        return threeDayDataExtended;
+    }
+    public LiveData<ArrayList<BasicWeather>> getThreeDayData()
+    {
+        return threeDayData;
+    }
     @Override
     public void weatherUnsuccessfullyParsed()
     {

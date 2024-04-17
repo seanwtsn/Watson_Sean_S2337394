@@ -24,7 +24,7 @@ public class MainFragmentViewModel extends ViewModel {
     {
 
         model = MainModel.getModelInstance();
-
+        weatherMutableLiveData = (MutableLiveData<ExtendedWeather>) model.getOneDayDataExtended();
 
         if(model.getOneDayExtended() != null)
         {
