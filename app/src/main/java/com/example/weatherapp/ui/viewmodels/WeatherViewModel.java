@@ -1,17 +1,15 @@
 package com.example.weatherapp.ui.viewmodels;
 
-import android.app.Application;
-
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
 import com.example.weatherapp.data.LocationRSS;
 import com.example.weatherapp.models.MainModel;
 
 import java.util.ArrayList;
 
-public class WeatherViewModel extends AndroidViewModel
+public class WeatherViewModel extends ViewModel
 {
     private MutableLiveData<ArrayList<LocationRSS>> listMutableLiveData = new MutableLiveData<>();
 
@@ -25,11 +23,10 @@ public class WeatherViewModel extends AndroidViewModel
         this.listMutableLiveData.setValue(listMutableLiveData);
     }
 
-    public WeatherViewModel(Application application)
+    public WeatherViewModel()
     {
-        super(application);
         MainModel model = MainModel.getModelInstance();
-        if(model.getLocationRSS() != null)
+        if(model.isReadSucessfully())
         {
             setListMutableLiveData(model.getLocationRSS());
         }

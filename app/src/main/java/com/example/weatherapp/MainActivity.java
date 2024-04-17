@@ -99,12 +99,14 @@ public class MainActivity extends AppCompatActivity {
 
                 if(currentPos != null)
                 {
+                    mainModel.getLocationRSS(getApplicationContext());
                     rss = mainModel.getRSSKeyFromLocation(currentPos);
                     mainModel.doWeatherTask(rss);
                     createUI();
                 }
                 else
                 {
+                    mainModel.getLocationRSS(getApplicationContext());
                     rss = mainModel.getRSSKeyFromLocation(new LatLng(51.509865,-0.118092));
                     mainModel.doWeatherTask(rss);
                     createUI();

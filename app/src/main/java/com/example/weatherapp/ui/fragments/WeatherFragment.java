@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,16 +25,19 @@ public class WeatherFragment extends Fragment {
 
     }
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
-        viewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
 
     }
 
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             Bundle savedInstanceState)
+    {
+        viewModel = new ViewModelProvider(this).get(WeatherViewModel.class);
+
         View view = inflater.inflate(R.layout.fragment_weather_item_list, container, false);
 
         viewModel.getList().observe(getViewLifecycleOwner(), mainModel -> {

@@ -34,6 +34,7 @@ public class MainModel implements WeatherParsedListener, FileReadCallBack {
     private ArrayList<ExtendedWeather> threeDayExtended;
     private ArrayList<LocationRSS> locationRSS;
     private boolean isParsed = false;
+    private boolean isReadSucessfully = false;
 
     public MainModel()
     {
@@ -110,11 +111,7 @@ public class MainModel implements WeatherParsedListener, FileReadCallBack {
 
     public ArrayList<LocationRSS> getLocationRSS()
     {
-        if(locationRSS != null || !locationRSS.isEmpty())
-        {
-            return locationRSS;
-        }
-        return null;
+        return locationRSS;
     }
 
     public ExtendedWeather getOneDayExtended()
@@ -157,6 +154,11 @@ public class MainModel implements WeatherParsedListener, FileReadCallBack {
         this.threeDayExtended = threeDayExtended;
         this.threeDay = threeDayBasic;
         this.oneDayExtended = oneDayExtended;
+
+        //For some silly reason, the parser doesn't like retrieving conditions, so we do it here.
+        oneDayExtended.setConditions(threeDayBasic.get(0).getConditions());
+
+
         isParsed = true;
 
     }
@@ -170,10 +172,16 @@ public class MainModel implements WeatherParsedListener, FileReadCallBack {
     public void fileReadSuccessful(ArrayList<LocationRSS> list)
     {
         locationRSS = list;
+        isReadSucessfully = true;
         Log.d("RSS FR", "fileReadSuccessfully");
     }
 
     public boolean isParsed() {
         return isParsed;
+    }
+
+    public boolean isReadSucessfully()
+    {
+        return isReadSucessfully;
     }
 }

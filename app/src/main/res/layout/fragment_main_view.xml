@@ -2,49 +2,76 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_main_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".ui.fragments.MainFragment">
 
-    <ImageView
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="8dp"
-        android:src="@drawable/icon_folder"
-        app:layout_constraintEnd_toStartOf="@+id/main_location_text"
-        app:layout_constraintTop_toTopOf="@+id/main_location_text" />
 
-    <TextView
+    <Button
         android:id="@+id/main_location_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="80dp"
-        android:layout_marginTop="40dp"
-
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="28dp"
+        android:background="@android:color/transparent"
+        android:drawableLeft="@drawable/icon_folder"
         android:text="Location"
-        android:textSize="32sp"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/locationsCard"
+        android:animateLayoutChanges="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/main_location_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+
+        <androidx.fragment.app.FragmentContainerView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/locationsFragment"
+            />
+
+    </androidx.cardview.widget.CardView>
 
     <TextView
         android:id="@+id/temperature_one_day_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:text="32°C"
         android:textSize="60sp"
-        android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="@+id/main_location_text"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/main_location_text"
-        app:layout_constraintTop_toBottomOf="@+id/main_location_text" />
+        app:layout_constraintTop_toBottomOf="@+id/locationsCard" />
 
     <TextView
         android:id="@+id/main_conditions_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
         android:text="Cloudy With Showers"
         android:textSize="24sp"
-        android:layout_marginTop="30dp"
         app:layout_constraintStart_toStartOf="@+id/temperature_one_day_text"
         app:layout_constraintTop_toBottomOf="@+id/temperature_one_day_text" />
 
+
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
+
+
+
+
+
+
