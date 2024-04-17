@@ -1,12 +1,35 @@
 package com.example.weatherapp.ui.viewmodels;
 
-import android.app.Application;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
-import androidx.annotation.NonNull;
-import androidx.lifecycle.AndroidViewModel;
+import com.example.weatherapp.models.MainModel;
 
-public class MainActivityViewModel extends AndroidViewModel {
-    public MainActivityViewModel(@NonNull Application application) {
-        super(application);
+public class MainActivityViewModel extends ViewModel {
+
+    private MutableLiveData<MainModel> mainModelMutableLiveData;
+    public MutableLiveData<MainModel> getMainModelMutableLiveData()
+    {
+        if(mainModelMutableLiveData == null)
+        {
+            mainModelMutableLiveData = new MutableLiveData<>(MainModel.getModelInstance());
+            return mainModelMutableLiveData;
+        }
+        return mainModelMutableLiveData;
     }
+    public MainActivityViewModel()
+    {
+        getMainModelMutableLiveData();
+
+    }
+
+
+    public LiveData<MainModel> getModel()
+    {
+        return getMainModelMutableLiveData();
+    }
+
+
+
 }

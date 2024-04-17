@@ -22,6 +22,7 @@ public class OneDayViewModel extends ViewModel
     }
 
     public void setExtendedWeather(ExtendedWeather extendedWeather) {
+
         extendedWeatherMutableLiveData.setValue(extendedWeather);
     }
 

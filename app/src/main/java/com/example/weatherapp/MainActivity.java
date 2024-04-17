@@ -3,11 +3,13 @@ package com.example.weatherapp;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Looper;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.weatherapp.data.LocationRSS;
 import com.example.weatherapp.databinding.ActivityMainBinding;
@@ -24,7 +26,6 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 
@@ -35,8 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private String rss;
     private LatLng currentPos;
 
-    private final MainModel mm = MainModel.getModelInstance();
-
+    private final Object lock = new Object();
     private final LocationCallback locationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(@NonNull LocationResult locationResult) {
@@ -44,22 +44,14 @@ public class MainActivity extends AppCompatActivity {
 
             Location location = locationResult.getLocations().get(locationResult.getLocations().size() - 1);
 
-            if (location != null) {
-                //currentPos = new LatLng(location.getLatitude(), location.getLongitude());
-                currentPos = new LatLng(51.509865, -0.118092);
-                rss = mm.getRSSKeyFromLocation(currentPos);
-                mm.doWeatherTask(rss);
-
-                //mm.doWeatherTask(mm.getRSSKeyFromLocation(currentPos));
-
-
-            } else {
-                //defaults to London
+            if (location != null)
+            {
+                currentPos = new LatLng(location.getLatitude(), location.getLongitude());
+            }
+            else
+            {
+                currentPos = new LatLng(51.509865,-0.118092);
                 rss = "2643743";
-                mm.doWeatherTask(rss);
-                //mm.doWeatherTask(mm.getRSSKeyFromLocation(currentPos));
-
-
             }
 
         }
@@ -77,9 +69,9 @@ public class MainActivity extends AppCompatActivity {
             .setWaitForAccurateLocation(false).setMinUpdateIntervalMillis(LocationRequest.Builder.IMPLICIT_MIN_UPDATE_INTERVAL).setMaxUpdateDelayMillis(1).build();
 
     @Override
-    public void onResume() {
+    public void onResume()
+    {
         super.onResume();
-
     }
 
     @Override
@@ -98,10 +90,33 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        viewModel = new ViewModelProvider(this).get(MainActivityViewModel.class);
+        Observer<MainModel> observer = new Observer<MainModel>() {
+            @Override
+            public void onChanged(MainModel mainModel)
+            {
+                Log.d("MVVM", "OnChanged Called");
+
+                if(currentPos != null)
+                {
+                    rss = mainModel.getRSSKeyFromLocation(currentPos);
+                    mainModel.doWeatherTask(rss);
+                    createUI();
+                }
+                else
+                {
+                    rss = mainModel.getRSSKeyFromLocation(new LatLng(51.509865,-0.118092));
+                    mainModel.doWeatherTask(rss);
+                    createUI();
+                }
+
+                Log.d("MVVM", String.valueOf(viewModel.getModel().getValue().isParsed()));
+            }
+        };
+
+        viewModel.getModel().observe(this, observer);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
-        mm.getLocationRSS(getApplicationContext());
 
         com.example.weatherapp.databinding.ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
 
@@ -115,18 +130,33 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
-    public void startingLocation() {
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                rss = mm.getRSSKeyFromLocation(new LatLng(location.getLatitude(), location.getLongitude()));
-                mm.doWeatherTask(rss);
+    private void createUI()
+    {
+        //we have to wait because the parser is too speedy for us.
+        synchronized (lock)
+        {
+            try {
+                lock.wait(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
-        });
+
+            OneDayFragment oneDayFragment = new OneDayFragment();
+
+            ThreeDaySmallFragment threeDaySmallFragment = new ThreeDaySmallFragment();
+
+            MainFragment mainFragment = new MainFragment();
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.frag, mainFragment, "one").commit();
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.frag_two, threeDaySmallFragment, "two").commit();
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.frag_three, oneDayFragment, "two").commit();
+
+            getSupportFragmentManager().executePendingTransactions();
+
+
+        }
     }
 
     public void onStart() {
@@ -149,31 +179,9 @@ public class MainActivity extends AppCompatActivity {
         };
 
 
-        OneDayFragment oneDayFragment = new OneDayFragment();
 
-        ThreeDaySmallFragment threeDaySmallFragment = new ThreeDaySmallFragment();
 
-        MainFragment mainFragment = new MainFragment();
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.frag, mainFragment, "one").commit();
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.frag_two, threeDaySmallFragment, "two").commit();
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.frag_three, oneDayFragment, "two").commit();
-
-        getSupportFragmentManager().executePendingTransactions();
-
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
-
-        startingLocation();
 
     }
-
-
-
-
 
 }

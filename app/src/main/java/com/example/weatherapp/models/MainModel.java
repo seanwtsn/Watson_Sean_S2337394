@@ -33,6 +33,7 @@ public class MainModel implements WeatherParsedListener, FileReadCallBack {
     private ArrayList<BasicWeather> threeDay;
     private ArrayList<ExtendedWeather> threeDayExtended;
     private ArrayList<LocationRSS> locationRSS;
+    private boolean isParsed = false;
 
     public MainModel()
     {
@@ -156,6 +157,8 @@ public class MainModel implements WeatherParsedListener, FileReadCallBack {
         this.threeDayExtended = threeDayExtended;
         this.threeDay = threeDayBasic;
         this.oneDayExtended = oneDayExtended;
+        isParsed = true;
+
     }
 
     @Override
@@ -168,5 +171,9 @@ public class MainModel implements WeatherParsedListener, FileReadCallBack {
     {
         locationRSS = list;
         Log.d("RSS FR", "fileReadSuccessfully");
+    }
+
+    public boolean isParsed() {
+        return isParsed;
     }
 }

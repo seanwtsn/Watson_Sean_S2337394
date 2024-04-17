@@ -29,7 +29,9 @@ public class MainFragment extends Fragment {
         TextView temperatureText = binding.temperatureOneDayText;
         TextView conditionsText = binding.mainConditionsText;
 
-        MainFragmentViewModel mainViewModel = new ViewModelProvider(this, ViewModelProvider.Factory.from(MainFragmentViewModel.initializer)).get(MainFragmentViewModel.class);
+        //MainFragmentViewModel mainViewModel = new ViewModelProvider(this, ViewModelProvider.Factory.from(MainFragmentViewModel.initializer)).get(MainFragmentViewModel.class);
+
+        MainFragmentViewModel mainViewModel = new ViewModelProvider(this).get(MainFragmentViewModel.class);
 
         Observer<ExtendedWeather> condition = extendedWeather -> {
             Log.d("VMOC", extendedWeather.getConditions());
@@ -46,6 +48,8 @@ public class MainFragment extends Fragment {
         };
 
         mainViewModel.retrieveWeather().observe(getViewLifecycleOwner(), condition);
+
+
 
         return root;
     }

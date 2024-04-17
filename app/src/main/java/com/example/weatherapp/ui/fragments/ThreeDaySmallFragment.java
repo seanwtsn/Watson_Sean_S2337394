@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.weatherapp.R;
 import com.example.weatherapp.data.BasicWeather;
@@ -25,10 +25,11 @@ public class ThreeDaySmallFragment extends Fragment {
 
     private ThreeDaySmallViewModel viewModel;
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState)
+    {
         super.onViewCreated(view, savedInstanceState);
 
-        viewModel = ViewModelProviders.of(this).get(ThreeDaySmallViewModel.class);
+        viewModel = new ViewModelProvider(this).get(ThreeDaySmallViewModel.class);
 
         ArrayList<TextView> temperatureView;
         ArrayList<TextView> dayView;
@@ -68,13 +69,7 @@ public class ThreeDaySmallFragment extends Fragment {
             public void onChanged(ArrayList<BasicWeather> basicWeathers) {
                 WeatherIconHelper weatherIconHelper = new WeatherIconHelper();
 
-
-
-
                 Log.d("VM", basicWeathers.toString());
-
-
-
 
                 for (int i = 0; i < basicWeathers.size(); i++)
                 {
