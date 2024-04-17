@@ -1,4 +1,4 @@
-package com.example.weatherapp;
+package com.example.weatherapp.interfaces;
 
 import com.example.weatherapp.data.BasicWeather;
 import com.example.weatherapp.data.ExtendedWeather;

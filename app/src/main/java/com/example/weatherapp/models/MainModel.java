@@ -4,14 +4,14 @@ package com.example.weatherapp.models;
 import android.content.Context;
 import android.util.Log;
 
-import com.example.weatherapp.FileReadCallBack;
-import com.example.weatherapp.WeatherParsedListener;
 import com.example.weatherapp.data.BasicWeather;
 import com.example.weatherapp.data.ExtendedWeather;
 import com.example.weatherapp.data.LocationRSS;
 import com.example.weatherapp.data.tasks.FileRead;
 import com.example.weatherapp.data.tasks.GetWeatherTask;
 import com.example.weatherapp.helpers.ReturnClosestLocationHelper;
+import com.example.weatherapp.interfaces.FileReadCallBack;
+import com.example.weatherapp.interfaces.WeatherParsedListener;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
@@ -35,6 +35,7 @@ public class MainModel implements WeatherParsedListener, FileReadCallBack {
     private ArrayList<LocationRSS> locationRSS;
     private boolean isParsed = false;
     private boolean isReadSucessfully = false;
+
 
     public MainModel()
     {
@@ -113,17 +114,14 @@ public class MainModel implements WeatherParsedListener, FileReadCallBack {
     {
         return locationRSS;
     }
-
     public ExtendedWeather getOneDayExtended()
     {
         return oneDayExtended;
     }
-
     public ArrayList<BasicWeather> getThreeDay()
     {
         return threeDay;
     }
-
     public ArrayList<ExtendedWeather> getThreeDayExtended()
     {
         return threeDayExtended;

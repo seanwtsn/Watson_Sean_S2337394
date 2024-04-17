@@ -2,7 +2,7 @@ package com.example.weatherapp.data.tasks;
 
 import android.content.Context;
 
-import com.example.weatherapp.FileReadCallBack;
+import com.example.weatherapp.interfaces.FileReadCallBack;
 import com.example.weatherapp.data.LocationRSS;
 import com.google.android.gms.maps.model.LatLng;
 

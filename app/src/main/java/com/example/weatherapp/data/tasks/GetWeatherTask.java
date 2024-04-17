@@ -3,7 +3,7 @@ package com.example.weatherapp.data.tasks;
 import android.os.Build;
 import android.util.Log;
 
-import com.example.weatherapp.WeatherParsedListener;
+import com.example.weatherapp.interfaces.WeatherParsedListener;
 import com.example.weatherapp.data.BasicWeather;
 import com.example.weatherapp.data.ExtendedWeather;
 import com.google.android.gms.maps.model.LatLng;

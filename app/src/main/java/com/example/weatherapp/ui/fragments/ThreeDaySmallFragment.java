@@ -112,10 +112,7 @@ public class ThreeDaySmallFragment extends Fragment {
                     sb.append(((int)basicWeathers.get(i).getLowTemperature()));
                     sb.append("°C");
                     temperatureView.get(i).setText(sb.toString());
-
                     imageView.get(i).setImageResource(weatherIconHelper.getWeatherIcon(basicWeathers.get(i).getConditions()));
-
-
                 }
 
 

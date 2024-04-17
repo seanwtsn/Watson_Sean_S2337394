@@ -15,14 +15,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.weatherapp.R;
 import com.example.weatherapp.WeatherRecyclerViewAdapter;
+import com.example.weatherapp.interfaces.OnLocationSelectedListener;
 import com.example.weatherapp.ui.viewmodels.WeatherViewModel;
 
 public class WeatherFragment extends Fragment {
 
     private WeatherViewModel viewModel;
-    public WeatherFragment()
-    {
 
+    OnLocationSelectedListener onLocationSelectedListener;
+    public WeatherFragment(OnLocationSelectedListener onLocationSelectedListener)
+    {
+        this.onLocationSelectedListener = onLocationSelectedListener;
     }
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -46,7 +49,7 @@ public class WeatherFragment extends Fragment {
                 Context context = view.getContext();
                 RecyclerView recyclerView = (RecyclerView) view;
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
-                recyclerView.setAdapter(new WeatherRecyclerViewAdapter(viewModel.getList().getValue(), viewModel));
+                recyclerView.setAdapter(new WeatherRecyclerViewAdapter(onLocationSelectedListener, viewModel.getList().getValue(), viewModel));
             }
         });
 

@@ -18,8 +18,7 @@ public class MainFragmentViewModel extends ViewModel {
 
     public void setWeather(ExtendedWeather extendedWeather)
     {
-        weatherMutableLiveData.setValue(extendedWeather);
-
+        weatherMutableLiveData.postValue(extendedWeather);
     }
     public MainFragmentViewModel()
     {

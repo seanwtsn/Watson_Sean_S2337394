@@ -10,6 +10,7 @@ import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.weatherapp.data.LocationRSS;
+import com.example.weatherapp.interfaces.OnLocationSelectedListener;
 import com.example.weatherapp.ui.viewmodels.WeatherViewModel;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<WeatherRecy
 
     private String[] values;
     private String[] keys;
+    private final OnLocationSelectedListener onLocationSelectedListener;
     private final WeatherViewModel model;
 
     private final View.OnClickListener holderOnClickerListener = new View.OnClickListener() {
@@ -29,9 +31,12 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<WeatherRecy
         }
     };
 
+
+
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
-    public WeatherRecyclerViewAdapter(ArrayList<LocationRSS> values, WeatherViewModel model)
+    public WeatherRecyclerViewAdapter(OnLocationSelectedListener onLocationSelectedListener, ArrayList<LocationRSS> values, WeatherViewModel model)
     {
+        this.onLocationSelectedListener = onLocationSelectedListener;
         this.values = new String[values.size()];
         this.keys = new String[values.size()];
         for (int i = 0; i < values.size(); i++)
@@ -56,7 +61,8 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<WeatherRecy
     public void onBindViewHolder(final ViewHolder holder, int position)
     {
         holder.locationText.setText(values[position]);
-        holder.rss = values[position];
+        holder.rss = keys[position];
+        holder.onLocationSelectedListener = onLocationSelectedListener;
 
     }
 
@@ -66,22 +72,26 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<WeatherRecy
         return this.values.length;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
+    {
         private TextView locationText;
         private String rss;
+        private OnLocationSelectedListener onLocationSelectedListener;
 
         @Override
         public void onClick(View v )
         {
-            //((FragmentActivity)v.getContext()).getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView, new ThreeDayLargeFragment(rss)).commit();
+            onLocationSelectedListener.onLocationSelected(rss);
         }
 
-        public ViewHolder(View view) {
+        public ViewHolder(View view)
+        {
             super(view);
             locationText = view.findViewById(R.id.button);
             locationText.setOnClickListener(this);
+
         }
+
 
 
     }

@@ -3,7 +3,6 @@ package com.example.weatherapp.ui.fragments;
 import android.os.Bundle;
 import android.transition.AutoTransition;
 import android.transition.TransitionManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,11 +18,19 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.weatherapp.data.ExtendedWeather;
 import com.example.weatherapp.databinding.FragmentMainViewBinding;
+import com.example.weatherapp.interfaces.OnLocationSelectedListener;
 import com.example.weatherapp.ui.viewmodels.MainFragmentViewModel;
 
 public class MainFragment extends Fragment {
 
     private FragmentMainViewBinding binding;
+    private final WeatherFragment weatherFragment;
+
+    public MainFragment(OnLocationSelectedListener onLocationSelectedListener)
+    {
+        weatherFragment = new WeatherFragment(onLocationSelectedListener);
+    }
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -40,7 +47,7 @@ public class MainFragment extends Fragment {
 
         fragmentContainerView.setVisibility(View.GONE);
 
-        getChildFragmentManager().beginTransaction().replace(fragmentContainerView.getId(), new WeatherFragment()).commit();
+        getChildFragmentManager().beginTransaction().replace(fragmentContainerView.getId(), weatherFragment).commit();
 
         getChildFragmentManager().executePendingTransactions();
         locationText.setOnClickListener(new View.OnClickListener() {
@@ -55,7 +62,8 @@ public class MainFragment extends Fragment {
                 }
                 else
                 {
-
+                    TransitionManager.beginDelayedTransition(cardView, new AutoTransition());
+                    fragmentContainerView.setVisibility(View.GONE);
                 }
             }
         });
@@ -63,10 +71,6 @@ public class MainFragment extends Fragment {
         MainFragmentViewModel mainViewModel = new ViewModelProvider(this).get(MainFragmentViewModel.class);
 
         Observer<ExtendedWeather> condition = extendedWeather -> {
-            Log.d("VMOC", extendedWeather.getConditions());
-            Log.d("VMOC", extendedWeather.getLocationName());
-            Log.d("VMOC", extendedWeather.getVisibility());
-
             StringBuilder sb = new StringBuilder();
 
             sb.append((int)extendedWeather.getCurrentTemperature()).append("°C");

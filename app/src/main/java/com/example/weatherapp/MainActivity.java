@@ -1,18 +1,17 @@
 package com.example.weatherapp;
 
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.weatherapp.data.LocationRSS;
 import com.example.weatherapp.databinding.ActivityMainBinding;
+import com.example.weatherapp.interfaces.OnLocationSelectedListener;
 import com.example.weatherapp.models.MainModel;
 import com.example.weatherapp.ui.fragments.MainFragment;
 import com.example.weatherapp.ui.fragments.OneDayFragment;
@@ -37,7 +36,8 @@ public class MainActivity extends AppCompatActivity {
     private LatLng currentPos;
 
     private final Object lock = new Object();
-    private final LocationCallback locationCallback = new LocationCallback() {
+    private final LocationCallback locationCallback = new LocationCallback()
+    {
         @Override
         public void onLocationResult(@NonNull LocationResult locationResult) {
             super.onLocationResult(locationResult);
@@ -63,6 +63,15 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    private final OnLocationSelectedListener onLocationSelectedListener = new OnLocationSelectedListener()
+    {
+        @Override
+        public void onLocationSelected(String rss)
+        {
+            viewModel.getModel().getValue().doWeatherTask(rss);
+        }
+    };
+
     private FusedLocationProviderClient fusedLocationProviderClient;
 
     private final LocationRequest locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 4000)
@@ -81,8 +90,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onDestroy() {
-
+    public void onDestroy()
+    {
         super.onDestroy();
         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
     }
@@ -111,8 +120,6 @@ public class MainActivity extends AppCompatActivity {
                     mainModel.doWeatherTask(rss);
                     createUI();
                 }
-
-                Log.d("MVVM", String.valueOf(viewModel.getModel().getValue().isParsed()));
             }
         };
 
@@ -123,13 +130,6 @@ public class MainActivity extends AppCompatActivity {
         com.example.weatherapp.databinding.ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
 
         setContentView(binding.getRoot());
-
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST);
-            return;
-        }
-
 
     }
     private void createUI()
@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
 
             ThreeDaySmallFragment threeDaySmallFragment = new ThreeDaySmallFragment();
 
-            MainFragment mainFragment = new MainFragment();
+            MainFragment mainFragment = new MainFragment(onLocationSelectedListener);
 
             getSupportFragmentManager().beginTransaction().replace(R.id.frag, mainFragment, "one").commit();
 
