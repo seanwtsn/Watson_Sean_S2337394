@@ -28,7 +28,7 @@ public class WeatherViewModel extends ViewModel
         MainModel model = MainModel.getModelInstance();
         if(model.isReadSucessfully())
         {
-            setListMutableLiveData(model.getLocationRSS());
+            listMutableLiveData = (MutableLiveData<ArrayList<LocationRSS>>) model.getLocationDataRSS();
         }
     }
 }

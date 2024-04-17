@@ -14,6 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="28dp"
+
         android:background="@android:color/transparent"
         android:drawableLeft="@drawable/icon_folder"
         android:text="Location"

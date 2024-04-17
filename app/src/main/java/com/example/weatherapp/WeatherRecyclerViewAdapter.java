@@ -72,7 +72,7 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<WeatherRecy
         return this.values.length;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
         private TextView locationText;
         private String rss;

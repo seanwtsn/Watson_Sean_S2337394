@@ -167,6 +167,12 @@ public class MainModel implements WeatherParsedListener, FileReadCallBack {
         isParsed = true;
 
     }
+    private MutableLiveData<ArrayList<LocationRSS>> locationRSSMutableData = new MutableLiveData<>();
+
+    private void updateLocationRSS(ArrayList<LocationRSS> locationRSS)
+    {
+        locationRSSMutableData.postValue(locationRSS);
+    }
 
     private MutableLiveData<ExtendedWeather> oneDayDataExtended = new MutableLiveData<>();
     private void updateOneDayExtended(ExtendedWeather weather)
@@ -198,6 +204,10 @@ public class MainModel implements WeatherParsedListener, FileReadCallBack {
     {
         return threeDayData;
     }
+    public LiveData<ArrayList<LocationRSS>> getLocationDataRSS()
+    {
+        return locationRSSMutableData;
+    }
     @Override
     public void weatherUnsuccessfullyParsed()
     {
@@ -207,6 +217,9 @@ public class MainModel implements WeatherParsedListener, FileReadCallBack {
     public void fileReadSuccessful(ArrayList<LocationRSS> list)
     {
         locationRSS = list;
+
+        updateLocationRSS(list);
+
         isReadSucessfully = true;
         Log.d("RSS FR", "fileReadSuccessfully");
     }
