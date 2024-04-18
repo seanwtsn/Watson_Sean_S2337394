@@ -8,16 +8,23 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
+import com.example.weatherapp.data.LocationRSS;
+import com.example.weatherapp.ui.viewmodels.MapsViewModel;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.ArrayList;
 
 public class MapsFragment extends Fragment {
 
+
+    private MapsViewModel viewModel;
+    private ArrayList<LocationRSS> locations;
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
         /**
@@ -30,10 +37,13 @@ public class MapsFragment extends Fragment {
          * user has installed Google Play services and returned to the app.
          */
         @Override
-        public void onMapReady(GoogleMap googleMap) {
-            LatLng sydney = new LatLng(-34, 151);
-            googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        public void onMapReady(GoogleMap googleMap)
+        {
+            for (int i = 0; i < locations.size(); i++)
+            {
+                googleMap.addMarker(new MarkerOptions().position(locations.get(i).getPosition()));
+
+            }
         }
     };
 
@@ -42,6 +52,20 @@ public class MapsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
+        viewModel = new ViewModelProvider(this).get(MapsViewModel.class);
+
+        Observer<ArrayList<LocationRSS>> observer = new Observer<ArrayList<LocationRSS>>() {
+            @Override
+            public void onChanged(ArrayList<LocationRSS> list) {
+
+                locations = list;
+
+            }
+        };
+
+
+
         return inflater.inflate(R.layout.fragment_maps, container, false);
     }
 
