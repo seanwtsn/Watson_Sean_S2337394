@@ -10,7 +10,7 @@ public class WeatherIconHelper
     {
 
     }
-    public int getWeatherIcon(String weather)
+    public static int getWeatherIcon(String weather)
     {
 
         weather = weather.toLowerCase();

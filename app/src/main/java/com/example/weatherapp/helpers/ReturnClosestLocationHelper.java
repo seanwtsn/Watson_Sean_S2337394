@@ -4,7 +4,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class ReturnClosestLocationHelper
 {
-    public double getDistance(LatLng currentPos, LatLng closestPos)
+    public static double getDistance(LatLng currentPos, LatLng closestPos)
     {
         double closestLat = Math.toRadians(closestPos.latitude);
         double closestLon = Math.toRadians(closestPos.longitude);

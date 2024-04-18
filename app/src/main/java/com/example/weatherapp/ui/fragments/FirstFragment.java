@@ -83,14 +83,14 @@ public class FirstFragment extends Fragment {
         Observer<ExtendedWeather> condition = extendedWeather -> {
             StringBuilder sb = new StringBuilder();
 
-            WeatherIconHelper weatherIconHelper = new WeatherIconHelper();
+
 
             sb.append((int)extendedWeather.getCurrentTemperature()).append("°C");
 
             conditionsText.setText(extendedWeather.getConditions());
             temperatureText.setText(sb.toString());
             locationText.setText(extendedWeather.getLocationName().replace(",",""));
-            imageCondition.setImageResource(weatherIconHelper.getWeatherIcon(extendedWeather.getConditions()));
+            imageCondition.setImageResource(WeatherIconHelper.getWeatherIcon(extendedWeather.getConditions()));
         };
 
         mainViewModel.retrieveWeather().observe(getViewLifecycleOwner(), condition);

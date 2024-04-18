@@ -179,13 +179,18 @@ public class MainFragment extends Fragment
 
             OneDayGridFragment oneDayGridFragment = OneDayGridFragment.newInstance();
 
+            ThreeDayLargeFragment threeDayLargeFragment = ThreeDayLargeFragment.newInstance();
+
             getChildFragmentManager().beginTransaction().replace(R.id.frag, firstFragment, "one").commit();
 
             getChildFragmentManager().beginTransaction().replace(R.id.frag_two, oneDayFragment, "two").commit();
 
             getChildFragmentManager().beginTransaction().replace(R.id.frag_three, threeDaySmallFragment, "three").commit();
 
-            getChildFragmentManager().beginTransaction().replace(R.id.frag_grid, oneDayGridFragment, "three").commit();
+            getChildFragmentManager().beginTransaction().replace(R.id.frag_grid, oneDayGridFragment, "four").commit();
+
+            getChildFragmentManager().beginTransaction().replace(R.id.frag_five, threeDayLargeFragment, "five").commit();
+
 
             getChildFragmentManager().executePendingTransactions();
 

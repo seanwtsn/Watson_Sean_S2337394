@@ -48,34 +48,6 @@ public class MainModel implements WeatherParsedListener, FileReadCallBack {
     {
         getWeather(rss);
     }
-
-    public String getWindDir(String wd)
-    {
-        wd = wd.toLowerCase();
-
-        switch(wd)
-        {
-            case "south westerly":
-                return "SW";
-            case "north westerly":
-                return "NW";
-            case "north easterly":
-                return "NE";
-            case "south easterly":
-                return "SE";
-            case "easterly":
-                return "E";
-            case "northerly":
-                return "N";
-            case "westerly":
-                return "W";
-            case "southerly":
-                return "S";
-        }
-
-        return "NA";
-    }
-
     private String constructRSSURL(String key, boolean isOneDay)
     {
         StringBuilder sb = new StringBuilder();
@@ -133,13 +105,13 @@ public class MainModel implements WeatherParsedListener, FileReadCallBack {
     {
         if(locationRSS != null)
         {
-            ReturnClosestLocationHelper closestLocationHelper = new ReturnClosestLocationHelper();
+
             double temp = 1f;
             int index = 0;
 
             for (int i = 0; i < locationRSS.size(); i++) {
-                if (closestLocationHelper.getDistance(location, locationRSS.get(i).getPosition()) < temp) {
-                    temp = closestLocationHelper.getDistance(location, locationRSS.get(i).getPosition());
+                if (ReturnClosestLocationHelper.getDistance(location, locationRSS.get(i).getPosition()) < temp) {
+                    temp = ReturnClosestLocationHelper.getDistance(location, locationRSS.get(i).getPosition());
                     index = i;
                 }
 
