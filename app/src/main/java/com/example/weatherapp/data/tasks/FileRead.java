@@ -98,7 +98,7 @@ public class FileRead implements Runnable
         {
             try {
                 FileWriter fileWriter = new FileWriter(file);
-                fileWriter.write("{\"locations\":[{\"name\":\"London\",\"countryCode\":\"UK\",\"position\":\"51.509865,-0.118092\",\"rssKey\":\"2643743\"},{\"name\":\"Belfast\",\"countryCode\":\"UK\",\"position\":\"54.607868,-5.926437\",\"rssKey\":\"2655984\"},{\"name\":\"Manchester\",\"countryCode\":\"UK\",\"position\":\"53.483959,-2.244644\",\"rssKey\":\"2643123\"},{\"name\":\"Hull\",\"countryCode\":\"UK\",\"position\":\"53.76775,-0.335827\",\"rssKey\":\"2645425\"}]}\"}]}");
+                fileWriter.write("{\"locations\":[{\"name\":\"Edinburgh\",\"countryCode\":\"UK\",\"position\":\"55.953251,-3.188267\",\"rssKey\":\"2650225\"},{\"name\":\"Irvine\",\"countryCode\":\"UK\",\"position\":\"55.6115669,-4.6696364\",\"rssKey\":\"2646032\"},{\"name\":\"Cardiff\",\"countryCode\":\"UK\",\"position\":\"51.481583,-3.17909\",\"rssKey\":\"2653822\"},{\"name\":\"Edinburgh\",\"countryCode\":\"UK\",\"position\":\"55.953251,-3.188267\",\"rssKey\":\"2650225\"},{\"name\":\"Inverness\",\"countryCode\":\"UK\",\"position\":\"57.477772,-4.224721\",\"rssKey\":\"2646088\"},{\"name\":\"Irvine\",\"countryCode\":\"UK\",\"position\":\"55.6115669,-4.6696364\",\"rssKey\":\"2646032\"}]}");
                 fileWriter.flush();
                 fileWriter.close();
 

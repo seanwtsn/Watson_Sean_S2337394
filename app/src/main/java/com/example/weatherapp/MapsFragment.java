@@ -16,6 +16,7 @@ import com.example.weatherapp.ui.viewmodels.MapsViewModel;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 
@@ -23,7 +24,7 @@ public class MapsFragment extends Fragment {
 
 
     private MapsViewModel viewModel;
-    private ArrayList<LocationRSS> locations;
+    private ArrayList<LocationRSS> locations = new ArrayList<>();
     private GoogleMap map;
 
     public MapsFragment()
@@ -47,15 +48,14 @@ public class MapsFragment extends Fragment {
             map = googleMap;
             map.getUiSettings().setZoomControlsEnabled(true);
 
-
-            /*
-            for (int i = 0; i < locations.size(); i++)
+            if(!locations.isEmpty())
             {
-                googleMap.addMarker(new MarkerOptions().position(locations.get(i).getPosition()));
+                for (int i = 0; i < locations.size(); i++)
+                {
+                    map.addMarker(new MarkerOptions().position(locations.get(i).getPosition()));
 
+                }
             }
-
-             */
         }
     };
 
@@ -73,9 +73,11 @@ public class MapsFragment extends Fragment {
 
                 locations = list;
 
+
             }
         };
 
+        viewModel.getlocationRSSLiveData().observe(getViewLifecycleOwner(), observer);
 
 
         return inflater.inflate(R.layout.fragment_maps, container, false);
