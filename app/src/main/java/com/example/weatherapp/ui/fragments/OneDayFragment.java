@@ -21,7 +21,18 @@ public class OneDayFragment extends Fragment {
     private TextView statusView;
     public OneDayFragment() {
         // Required empty public constructor
-    }@Override
+    }
+
+    public static OneDayFragment newInstance()
+    {
+        Bundle bundle = new Bundle();
+        OneDayFragment oneDayFragment = new OneDayFragment();
+        oneDayFragment.setArguments(bundle);
+
+        return oneDayFragment;
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);

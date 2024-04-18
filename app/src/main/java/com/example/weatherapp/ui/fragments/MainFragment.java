@@ -1,5 +1,6 @@
 package com.example.weatherapp.ui.fragments;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.transition.AutoTransition;
 import android.transition.TransitionManager;
@@ -7,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,17 +20,26 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.weatherapp.data.ExtendedWeather;
 import com.example.weatherapp.databinding.FragmentMainViewBinding;
+import com.example.weatherapp.helpers.WeatherIconHelper;
 import com.example.weatherapp.interfaces.OnLocationSelectedListener;
 import com.example.weatherapp.ui.viewmodels.MainFragmentViewModel;
 
 public class MainFragment extends Fragment {
 
     private FragmentMainViewBinding binding;
-    private final WeatherFragment weatherFragment;
-
-    public MainFragment(OnLocationSelectedListener onLocationSelectedListener)
+    private OnLocationSelectedListener onLocationSelectedListener;
+    public MainFragment()
     {
-        weatherFragment = new WeatherFragment(onLocationSelectedListener);
+
+    }
+    public static MainFragment newInstance(OnLocationSelectedListener onLocationSelectedListener)
+    {
+        MainFragment mainFragment = new MainFragment();
+        mainFragment.onLocationSelectedListener = onLocationSelectedListener;
+        Bundle bundle = new Bundle();
+        mainFragment.setArguments(bundle);
+        return mainFragment;
+
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -40,6 +51,7 @@ public class MainFragment extends Fragment {
         Button locationText = binding.mainLocationText;
         TextView temperatureText = binding.temperatureOneDayText;
         TextView conditionsText = binding.mainConditionsText;
+        ImageView imageCondition = binding.conditionsImage;
         FragmentContainerView fragmentContainerView = binding.locationsFragment;
         CardView cardView = binding.locationsCard;
 
@@ -47,7 +59,7 @@ public class MainFragment extends Fragment {
 
         fragmentContainerView.setVisibility(View.GONE);
 
-        getChildFragmentManager().beginTransaction().replace(fragmentContainerView.getId(), weatherFragment).commit();
+        getChildFragmentManager().beginTransaction().replace(fragmentContainerView.getId(), WeatherFragment.newInstance(onLocationSelectedListener)).commit();
 
         getChildFragmentManager().executePendingTransactions();
         locationText.setOnClickListener(new View.OnClickListener() {
@@ -73,11 +85,14 @@ public class MainFragment extends Fragment {
         Observer<ExtendedWeather> condition = extendedWeather -> {
             StringBuilder sb = new StringBuilder();
 
+            WeatherIconHelper weatherIconHelper = new WeatherIconHelper();
+
             sb.append((int)extendedWeather.getCurrentTemperature()).append("°C");
 
             conditionsText.setText(extendedWeather.getConditions());
             temperatureText.setText(sb.toString());
             locationText.setText(extendedWeather.getLocationName().replace(",",""));
+            imageCondition.setImageResource(weatherIconHelper.getWeatherIcon(extendedWeather.getConditions()));
         };
 
         mainViewModel.retrieveWeather().observe(getViewLifecycleOwner(), condition);
@@ -87,8 +102,17 @@ public class MainFragment extends Fragment {
         return root;
     }
 
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration configuration)
+    {
+        super.onConfigurationChanged(configuration);
 
-    //TODO: FIGURE OUT THE DATA OBSERVING THING, ONLY BEING TRIGGER AT INACTIVE
+
+
+    }
+
+
+
 
 
 

@@ -34,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
     private MainActivityViewModel viewModel;
     private String rss;
     private LatLng currentPos;
-
     private final Object lock = new Object();
     private final LocationCallback locationCallback = new LocationCallback()
     {
@@ -143,24 +142,23 @@ public class MainActivity extends AppCompatActivity {
                 throw new RuntimeException(e);
             }
 
-            OneDayFragment oneDayFragment = new OneDayFragment();
+            OneDayFragment oneDayFragment = OneDayFragment.newInstance();
 
-            ThreeDaySmallFragment threeDaySmallFragment = new ThreeDaySmallFragment();
+            ThreeDaySmallFragment threeDaySmallFragment = ThreeDaySmallFragment.newInstance();
 
-            MainFragment mainFragment = new MainFragment(onLocationSelectedListener);
+            MainFragment mainFragment = MainFragment.newInstance(onLocationSelectedListener);
 
             getSupportFragmentManager().beginTransaction().replace(R.id.frag, mainFragment, "one").commit();
 
             getSupportFragmentManager().beginTransaction().replace(R.id.frag_two, threeDaySmallFragment, "two").commit();
 
-            getSupportFragmentManager().beginTransaction().replace(R.id.frag_three, oneDayFragment, "two").commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.frag_three, oneDayFragment, "three").commit();
 
             getSupportFragmentManager().executePendingTransactions();
 
 
         }
     }
-
     public void onStart() {
         super.onStart();
 

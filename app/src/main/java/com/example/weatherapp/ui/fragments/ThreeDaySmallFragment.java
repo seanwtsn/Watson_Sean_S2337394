@@ -24,6 +24,21 @@ import java.util.ArrayList;
 public class ThreeDaySmallFragment extends Fragment {
 
     private ThreeDaySmallViewModel viewModel;
+
+    public ThreeDaySmallFragment()
+    {
+
+    }
+
+    public static ThreeDaySmallFragment newInstance()
+    {
+        Bundle bundle = new Bundle();
+        ThreeDaySmallFragment threeDaySmallFragment = new ThreeDaySmallFragment();
+
+        threeDaySmallFragment.setArguments(bundle);
+
+        return threeDaySmallFragment;
+    }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState)
     {

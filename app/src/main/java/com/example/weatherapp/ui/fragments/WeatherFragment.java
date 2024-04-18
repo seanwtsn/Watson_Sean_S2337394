@@ -21,11 +21,19 @@ import com.example.weatherapp.ui.viewmodels.WeatherViewModel;
 public class WeatherFragment extends Fragment {
 
     private WeatherViewModel viewModel;
-
-    OnLocationSelectedListener onLocationSelectedListener;
-    public WeatherFragment(OnLocationSelectedListener onLocationSelectedListener)
+    private OnLocationSelectedListener onLocationSelectedListener;
+    public static WeatherFragment newInstance(OnLocationSelectedListener onLocationSelectedListener)
     {
-        this.onLocationSelectedListener = onLocationSelectedListener;
+        Bundle bundle = new Bundle();
+        WeatherFragment weatherFragment = new WeatherFragment();
+        weatherFragment.onLocationSelectedListener = onLocationSelectedListener;
+        weatherFragment.setArguments(bundle);
+
+        return weatherFragment;
+    }
+    public WeatherFragment()
+    {
+
     }
     @Override
     public void onCreate(Bundle savedInstanceState)

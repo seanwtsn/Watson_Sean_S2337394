@@ -5,7 +5,7 @@
     android:id="@+id/fragment_main_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     tools:context=".ui.fragments.MainFragment">
 
 
@@ -37,7 +37,7 @@
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/locationsFragment"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
 
     </androidx.cardview.widget.CardView>
 
