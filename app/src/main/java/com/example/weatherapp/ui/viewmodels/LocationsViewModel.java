@@ -9,7 +9,7 @@ import com.example.weatherapp.models.MainModel;
 
 import java.util.ArrayList;
 
-public class WeatherViewModel extends ViewModel
+public class LocationsViewModel extends ViewModel
 {
     private MutableLiveData<ArrayList<LocationRSS>> listMutableLiveData = new MutableLiveData<>();
 
@@ -23,7 +23,7 @@ public class WeatherViewModel extends ViewModel
         this.listMutableLiveData.setValue(listMutableLiveData);
     }
 
-    public WeatherViewModel()
+    public LocationsViewModel()
     {
         MainModel model = MainModel.getModelInstance();
         if(model.isReadSucessfully())

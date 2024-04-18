@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.weatherapp.data.LocationRSS;
 import com.example.weatherapp.interfaces.OnLocationSelectedListener;
-import com.example.weatherapp.ui.viewmodels.WeatherViewModel;
+import com.example.weatherapp.ui.viewmodels.LocationsViewModel;
 
 import java.util.ArrayList;
 
@@ -21,7 +21,7 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<WeatherRecy
     private String[] values;
     private String[] keys;
     private final OnLocationSelectedListener onLocationSelectedListener;
-    private final WeatherViewModel model;
+    private final LocationsViewModel model;
 
     private final View.OnClickListener holderOnClickerListener = new View.OnClickListener() {
         @Override
@@ -34,7 +34,7 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<WeatherRecy
 
 
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
-    public WeatherRecyclerViewAdapter(OnLocationSelectedListener onLocationSelectedListener, ArrayList<LocationRSS> values, WeatherViewModel model)
+    public WeatherRecyclerViewAdapter(OnLocationSelectedListener onLocationSelectedListener, ArrayList<LocationRSS> values, LocationsViewModel model)
     {
         this.onLocationSelectedListener = onLocationSelectedListener;
         this.values = new String[values.size()];

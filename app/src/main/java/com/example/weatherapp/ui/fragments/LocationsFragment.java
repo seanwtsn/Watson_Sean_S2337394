@@ -16,22 +16,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.weatherapp.R;
 import com.example.weatherapp.WeatherRecyclerViewAdapter;
 import com.example.weatherapp.interfaces.OnLocationSelectedListener;
-import com.example.weatherapp.ui.viewmodels.WeatherViewModel;
+import com.example.weatherapp.ui.viewmodels.LocationsViewModel;
 
-public class WeatherFragment extends Fragment {
+public class LocationsFragment extends Fragment {
 
-    private WeatherViewModel viewModel;
+    private LocationsViewModel viewModel;
     private OnLocationSelectedListener onLocationSelectedListener;
-    public static WeatherFragment newInstance(OnLocationSelectedListener onLocationSelectedListener)
+    public static LocationsFragment newInstance(OnLocationSelectedListener onLocationSelectedListener)
     {
         Bundle bundle = new Bundle();
-        WeatherFragment weatherFragment = new WeatherFragment();
-        weatherFragment.onLocationSelectedListener = onLocationSelectedListener;
-        weatherFragment.setArguments(bundle);
+        LocationsFragment locationsFragment = new LocationsFragment();
+        locationsFragment.onLocationSelectedListener = onLocationSelectedListener;
+        locationsFragment.setArguments(bundle);
 
-        return weatherFragment;
+        return locationsFragment;
     }
-    public WeatherFragment()
+    public LocationsFragment()
     {
 
     }
@@ -47,7 +47,7 @@ public class WeatherFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
-        viewModel = new ViewModelProvider(this).get(WeatherViewModel.class);
+        viewModel = new ViewModelProvider(this).get(LocationsViewModel.class);
 
         View view = inflater.inflate(R.layout.fragment_weather_item_list, container, false);
 

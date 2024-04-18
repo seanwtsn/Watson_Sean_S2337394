@@ -13,7 +13,7 @@ android {
 
 
     dataBinding{
-        enable = true
+        enable = false
     }
 
     defaultConfig {

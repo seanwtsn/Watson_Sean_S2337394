@@ -9,4 +9,5 @@
     <string name="one_day_status">One Day Status</string>
     <string name="glasgow_rss">2648579</string>
     <string name="error_weather">Error! Weather Can\'t be Displayed!</string>
+    <string name="Map">Map</string>
 </resources>

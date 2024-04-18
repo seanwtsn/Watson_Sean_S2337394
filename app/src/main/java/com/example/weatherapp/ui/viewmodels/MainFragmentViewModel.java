@@ -4,35 +4,31 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.weatherapp.data.ExtendedWeather;
 import com.example.weatherapp.models.MainModel;
 
 public class MainFragmentViewModel extends ViewModel {
-    private MainModel model;
-    private MutableLiveData<ExtendedWeather> weatherMutableLiveData = new MutableLiveData<>();
 
-    public LiveData<ExtendedWeather> retrieveWeather()
+    private MutableLiveData<MainModel> mainModelMutableLiveData;
+    public MutableLiveData<MainModel> getMainModelMutableLiveData()
     {
-        return weatherMutableLiveData;
-    }
-
-    public void setWeather(ExtendedWeather extendedWeather)
-    {
-        weatherMutableLiveData.postValue(extendedWeather);
+        if(mainModelMutableLiveData == null)
+        {
+            mainModelMutableLiveData = new MutableLiveData<>(MainModel.getModelInstance());
+            return mainModelMutableLiveData;
+        }
+        return mainModelMutableLiveData;
     }
     public MainFragmentViewModel()
     {
-
-        model = MainModel.getModelInstance();
-        weatherMutableLiveData = (MutableLiveData<ExtendedWeather>) model.getOneDayDataExtended();
-
-        if(model.getOneDayExtended() != null)
-        {
-            setWeather(model.getOneDayExtended());
-        }
+        getMainModelMutableLiveData();
 
     }
 
+
+    public LiveData<MainModel> getModel()
+    {
+        return getMainModelMutableLiveData();
+    }
 
 
 

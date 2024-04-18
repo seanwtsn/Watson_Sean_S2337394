@@ -1,124 +1,174 @@
 package com.example.weatherapp.ui.fragments;
 
-import android.content.res.Configuration;
+import android.location.Location;
 import android.os.Bundle;
-import android.transition.AutoTransition;
-import android.transition.TransitionManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentContainerView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.weatherapp.data.ExtendedWeather;
-import com.example.weatherapp.databinding.FragmentMainViewBinding;
-import com.example.weatherapp.helpers.WeatherIconHelper;
+import com.example.weatherapp.R;
 import com.example.weatherapp.interfaces.OnLocationSelectedListener;
+import com.example.weatherapp.models.MainModel;
 import com.example.weatherapp.ui.viewmodels.MainFragmentViewModel;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationAvailability;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.Priority;
+import com.google.android.gms.maps.model.LatLng;
 
-public class MainFragment extends Fragment {
+public class MainFragment extends Fragment
+{
+    private MainFragmentViewModel mainFragmentViewModel;
+    private static final int PERMISSION_REQUEST = 123;
+    private String rss;
+    private LatLng currentPos;
+    private final Object lock = new Object();
 
-    private FragmentMainViewBinding binding;
-    private OnLocationSelectedListener onLocationSelectedListener;
     public MainFragment()
     {
 
     }
-    public static MainFragment newInstance(OnLocationSelectedListener onLocationSelectedListener)
+
+    public static MainFragment newInstance()
     {
-        MainFragment mainFragment = new MainFragment();
-        mainFragment.onLocationSelectedListener = onLocationSelectedListener;
         Bundle bundle = new Bundle();
+        MainFragment mainFragment = new MainFragment();
         mainFragment.setArguments(bundle);
+
         return mainFragment;
 
     }
+    private final OnLocationSelectedListener onLocationSelectedListener = new OnLocationSelectedListener()
+    {
+        @Override
+        public void onLocationSelected(String rss)
+        {
+            mainFragmentViewModel.getModel().getValue().doWeatherTask(rss);
+        }
+    };
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+    private FusedLocationProviderClient fusedLocationProviderClient;
 
-        binding = FragmentMainViewBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+    private final LocationRequest locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 4000)
+            .setWaitForAccurateLocation(false).setMinUpdateIntervalMillis(LocationRequest.Builder.IMPLICIT_MIN_UPDATE_INTERVAL).setMaxUpdateDelayMillis(1).build();
 
-        Button locationText = binding.mainLocationText;
-        TextView temperatureText = binding.temperatureOneDayText;
-        TextView conditionsText = binding.mainConditionsText;
-        ImageView imageCondition = binding.conditionsImage;
-        FragmentContainerView fragmentContainerView = binding.locationsFragment;
-        CardView cardView = binding.locationsCard;
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+    }
 
+    private final LocationCallback locationCallback = new LocationCallback()
+    {
+        @Override
+        public void onLocationResult(@NonNull LocationResult locationResult) {
+            super.onLocationResult(locationResult);
 
+            Location location = locationResult.getLocations().get(locationResult.getLocations().size() - 1);
 
-        fragmentContainerView.setVisibility(View.GONE);
-
-        getChildFragmentManager().beginTransaction().replace(fragmentContainerView.getId(), WeatherFragment.newInstance(onLocationSelectedListener)).commit();
-
-        getChildFragmentManager().executePendingTransactions();
-        locationText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
+            if (location != null)
             {
-                if(fragmentContainerView.getVisibility() == View.GONE)
-                {
-                    TransitionManager.beginDelayedTransition(cardView, new AutoTransition());
-                    fragmentContainerView.setVisibility(View.VISIBLE);
+                currentPos = new LatLng(location.getLatitude(), location.getLongitude());
+            }
+            else
+            {
+                currentPos = new LatLng(51.509865,-0.118092);
+                rss = "2643743";
+            }
 
-                }
-                else
-                {
-                    TransitionManager.beginDelayedTransition(cardView, new AutoTransition());
-                    fragmentContainerView.setVisibility(View.GONE);
+        }
+
+        @Override
+        public void onLocationAvailability(@NonNull LocationAvailability locationAvailability) {
+            super.onLocationAvailability(locationAvailability);
+
+        }
+    };
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        View view = inflater.inflate(R.layout.fragment_main_view, container, false);
+
+        mainFragmentViewModel = new ViewModelProvider(this).get(MainFragmentViewModel.class);
+
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        Observer<MainModel> observer = new Observer<MainModel>() {
+            @Override
+            public void onChanged(MainModel mainModel) {
+                Log.d("MVVM", "OnChanged Called");
+
+                if (currentPos != null) {
+                    mainModel.getLocationRSS(getContext());
+                    rss = mainModel.getRSSKeyFromLocation(currentPos);
+                    mainModel.doWeatherTask(rss);
+                    createUI();
+                } else {
+                    mainModel.getLocationRSS(getContext());
+                    rss = mainModel.getRSSKeyFromLocation(new LatLng(51.509865, -0.118092));
+                    mainModel.doWeatherTask(rss);
+                    createUI();
                 }
             }
-        });
-
-        MainFragmentViewModel mainViewModel = new ViewModelProvider(this).get(MainFragmentViewModel.class);
-
-        Observer<ExtendedWeather> condition = extendedWeather -> {
-            StringBuilder sb = new StringBuilder();
-
-            WeatherIconHelper weatherIconHelper = new WeatherIconHelper();
-
-            sb.append((int)extendedWeather.getCurrentTemperature()).append("°C");
-
-            conditionsText.setText(extendedWeather.getConditions());
-            temperatureText.setText(sb.toString());
-            locationText.setText(extendedWeather.getLocationName().replace(",",""));
-            imageCondition.setImageResource(weatherIconHelper.getWeatherIcon(extendedWeather.getConditions()));
         };
 
-        mainViewModel.retrieveWeather().observe(getViewLifecycleOwner(), condition);
+        mainFragmentViewModel.getModel().observe(getViewLifecycleOwner(), observer);
 
-
-
-        return root;
+        return view;
     }
 
-    @Override
-    public void onConfigurationChanged(@NonNull Configuration configuration)
+    private void createUI()
     {
-        super.onConfigurationChanged(configuration);
+        //we have to wait because the parser is too speedy for us.
+        synchronized (lock)
+        {
+            try {
+                lock.wait(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
 
 
+            OneDayFragment oneDayFragment = OneDayFragment.newInstance();
 
+            ThreeDaySmallFragment threeDaySmallFragment = ThreeDaySmallFragment.newInstance();
+
+            FirstFragment firstFragment = FirstFragment.newInstance(onLocationSelectedListener);
+
+            getChildFragmentManager().beginTransaction().replace(R.id.frag, firstFragment, "one").commit();
+
+            getChildFragmentManager().beginTransaction().replace(R.id.frag_two, threeDaySmallFragment, "two").commit();
+
+            getChildFragmentManager().beginTransaction().replace(R.id.frag_three, oneDayFragment, "three").commit();
+
+            getChildFragmentManager().executePendingTransactions();
+
+
+        }
     }
 
-
-
-
-
+    public void onPause() {
+        super.onPause();
+        fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+    }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+    public void onDestroy()
+    {
+        super.onDestroy();
+        fusedLocationProviderClient.removeLocationUpdates(locationCallback);
     }
+
+
 }

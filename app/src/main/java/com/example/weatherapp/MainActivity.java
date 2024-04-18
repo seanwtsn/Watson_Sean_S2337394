@@ -1,164 +1,59 @@
 package com.example.weatherapp;
 
-import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
+import androidx.fragment.app.Fragment;
 
 import com.example.weatherapp.data.LocationRSS;
 import com.example.weatherapp.databinding.ActivityMainBinding;
-import com.example.weatherapp.interfaces.OnLocationSelectedListener;
-import com.example.weatherapp.models.MainModel;
 import com.example.weatherapp.ui.fragments.MainFragment;
-import com.example.weatherapp.ui.fragments.OneDayFragment;
-import com.example.weatherapp.ui.fragments.ThreeDaySmallFragment;
-import com.example.weatherapp.ui.viewmodels.MainActivityViewModel;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationAvailability;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.Priority;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-
-    private static final int PERMISSION_REQUEST = 123;
-    private MainActivityViewModel viewModel;
-    private String rss;
-    private LatLng currentPos;
-    private final Object lock = new Object();
-    private final LocationCallback locationCallback = new LocationCallback()
-    {
-        @Override
-        public void onLocationResult(@NonNull LocationResult locationResult) {
-            super.onLocationResult(locationResult);
-
-            Location location = locationResult.getLocations().get(locationResult.getLocations().size() - 1);
-
-            if (location != null)
-            {
-                currentPos = new LatLng(location.getLatitude(), location.getLongitude());
-            }
-            else
-            {
-                currentPos = new LatLng(51.509865,-0.118092);
-                rss = "2643743";
-            }
-
-        }
-
-        @Override
-        public void onLocationAvailability(@NonNull LocationAvailability locationAvailability) {
-            super.onLocationAvailability(locationAvailability);
-
-        }
-    };
-
-    private final OnLocationSelectedListener onLocationSelectedListener = new OnLocationSelectedListener()
-    {
-        @Override
-        public void onLocationSelected(String rss)
-        {
-            viewModel.getModel().getValue().doWeatherTask(rss);
-        }
-    };
-
-    private FusedLocationProviderClient fusedLocationProviderClient;
-
-    private final LocationRequest locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 4000)
-            .setWaitForAccurateLocation(false).setMinUpdateIntervalMillis(LocationRequest.Builder.IMPLICIT_MIN_UPDATE_INTERVAL).setMaxUpdateDelayMillis(1).build();
-
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        fusedLocationProviderClient.removeLocationUpdates(locationCallback);
-    }
-
-    @Override
-    public void onDestroy()
-    {
-        super.onDestroy();
-        fusedLocationProviderClient.removeLocationUpdates(locationCallback);
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new ViewModelProvider(this).get(MainActivityViewModel.class);
-        Observer<MainModel> observer = new Observer<MainModel>() {
-            @Override
-            public void onChanged(MainModel mainModel)
-            {
-                Log.d("MVVM", "OnChanged Called");
 
-                if(currentPos != null)
-                {
-                    mainModel.getLocationRSS(getApplicationContext());
-                    rss = mainModel.getRSSKeyFromLocation(currentPos);
-                    mainModel.doWeatherTask(rss);
-                    createUI();
-                }
-                else
-                {
-                    mainModel.getLocationRSS(getApplicationContext());
-                    rss = mainModel.getRSSKeyFromLocation(new LatLng(51.509865,-0.118092));
-                    mainModel.doWeatherTask(rss);
-                    createUI();
-                }
-            }
-        };
-
-        viewModel.getModel().observe(this, observer);
-
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        setFragment(MainFragment.newInstance());
 
         com.example.weatherapp.databinding.ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
 
         setContentView(binding.getRoot());
 
-    }
-    private void createUI()
-    {
-        //we have to wait because the parser is too speedy for us.
-        synchronized (lock)
-        {
-            try {
-                lock.wait(1000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav);
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                if (item.getItemId() == R.id.navigation_home)
+                {
+                    setFragment(MainFragment.newInstance());
+                }
+                else
+                {
+                    setFragment(MapsFragment.newInstance());
+                }
+
+                return true;
             }
-
-            OneDayFragment oneDayFragment = OneDayFragment.newInstance();
-
-            ThreeDaySmallFragment threeDaySmallFragment = ThreeDaySmallFragment.newInstance();
-
-            MainFragment mainFragment = MainFragment.newInstance(onLocationSelectedListener);
-
-            getSupportFragmentManager().beginTransaction().replace(R.id.frag, mainFragment, "one").commit();
-
-            getSupportFragmentManager().beginTransaction().replace(R.id.frag_two, threeDaySmallFragment, "two").commit();
-
-            getSupportFragmentManager().beginTransaction().replace(R.id.frag_three, oneDayFragment, "three").commit();
-
-            getSupportFragmentManager().executePendingTransactions();
-
-
         }
+        );
+
     }
+
+    private void setFragment(Fragment fragment)
+    {
+        getSupportFragmentManager().beginTransaction().replace(R.id.absolute_main_container, fragment).commit();
+
+        getSupportFragmentManager().executePendingTransactions();
+    }
+
     public void onStart() {
         super.onStart();
 
@@ -177,11 +72,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         };
-
-
-
-
-
     }
 
 }
