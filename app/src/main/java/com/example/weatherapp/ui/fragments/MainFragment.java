@@ -6,11 +6,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.weatherapp.R;
 import com.example.weatherapp.interfaces.OnLocationSelectedListener;
@@ -25,6 +27,10 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 public class MainFragment extends Fragment
 {
     private MainFragmentViewModel mainFragmentViewModel;
@@ -32,6 +38,8 @@ public class MainFragment extends Fragment
     private String rss;
     private LatLng currentPos;
     private final Object lock = new Object();
+
+
 
     public MainFragment()
     {
@@ -103,6 +111,26 @@ public class MainFragment extends Fragment
 
         mainFragmentViewModel = new ViewModelProvider(this).get(MainFragmentViewModel.class);
 
+        SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.swipe_refresh);
+
+        TextView refreshedTextView = view.findViewById(R.id.last_refresh_text);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh()
+            {
+                mainFragmentViewModel.getModel().getValue().doWeatherTask(rss);
+
+
+                refreshedTextView.setText(buildRefreshText());
+
+
+                swipeRefreshLayout.setRefreshing(false);
+            }
+
+
+        });
+
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
         Observer<MainModel> observer = new Observer<MainModel>() {
             @Override
@@ -112,10 +140,12 @@ public class MainFragment extends Fragment
                 if (currentPos != null) {
                     mainModel.getLocationRSS(getContext());
                     rss = mainModel.getRSSKeyFromLocation(currentPos);
+                    refreshedTextView.setText(buildRefreshText());
                     mainModel.doWeatherTask(rss);
                     createUI();
                 } else {
                     mainModel.getLocationRSS(getContext());
+                    refreshedTextView.setText(buildRefreshText());
                     rss = mainModel.getRSSKeyFromLocation(new LatLng(51.509865, -0.118092));
                     mainModel.doWeatherTask(rss);
                     createUI();
@@ -140,17 +170,22 @@ public class MainFragment extends Fragment
             }
 
 
+
             OneDayFragment oneDayFragment = OneDayFragment.newInstance();
 
             ThreeDaySmallFragment threeDaySmallFragment = ThreeDaySmallFragment.newInstance();
 
             FirstFragment firstFragment = FirstFragment.newInstance(onLocationSelectedListener);
 
+            OneDayGridFragment oneDayGridFragment = OneDayGridFragment.newInstance();
+
             getChildFragmentManager().beginTransaction().replace(R.id.frag, firstFragment, "one").commit();
 
-            getChildFragmentManager().beginTransaction().replace(R.id.frag_two, threeDaySmallFragment, "two").commit();
+            getChildFragmentManager().beginTransaction().replace(R.id.frag_two, oneDayFragment, "two").commit();
 
-            getChildFragmentManager().beginTransaction().replace(R.id.frag_three, oneDayFragment, "three").commit();
+            getChildFragmentManager().beginTransaction().replace(R.id.frag_three, threeDaySmallFragment, "three").commit();
+
+            getChildFragmentManager().beginTransaction().replace(R.id.frag_grid, oneDayGridFragment, "three").commit();
 
             getChildFragmentManager().executePendingTransactions();
 
@@ -170,5 +205,17 @@ public class MainFragment extends Fragment
         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
     }
 
+    private String buildRefreshText()
+    {
+        StringBuilder sb = new StringBuilder();
 
+        DateFormat d = new SimpleDateFormat("h:mm a");
+        String t = d.format(Calendar.getInstance().getTime());
+
+        sb.append("Last Refreshed: ").append(t);
+
+
+
+        return sb.toString();
+    }
 }

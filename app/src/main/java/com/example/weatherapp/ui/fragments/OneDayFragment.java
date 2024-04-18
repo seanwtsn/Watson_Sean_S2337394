@@ -1,7 +1,6 @@
 package com.example.weatherapp.ui.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +14,6 @@ import com.example.weatherapp.data.ExtendedWeather;
 import com.example.weatherapp.ui.viewmodels.OneDayViewModel;
 
 public class OneDayFragment extends Fragment {
-
-
     private ExtendedWeather currentWeather;
     private TextView statusView;
     public OneDayFragment() {
@@ -55,7 +52,7 @@ public class OneDayFragment extends Fragment {
 
             if(currentWeather == null)
             {
-
+                errorWeather();
             }
             else
             {
@@ -86,29 +83,16 @@ public class OneDayFragment extends Fragment {
         sb.append("°C");
         sb.append((", Low: "));
         sb.append((int) currentWeather.getLowTemperature());
-        sb.append("°C,");
+        sb.append("°C");
         return sb.toString();
     }
     private void updateWeather()
     {
-        if(currentWeather != null)
-        {
-            statusView.setText(buildStatusText());
-        }
-        else
-        {
-            Log.d("Testing", "Current Weather is Null");
-
-
-
-
-
-        }
+        statusView.setText(buildStatusText());
     }
-
     private void errorWeather()
     {
-
+        statusView.setText("Error! Cannot retrieve weather!");
     }
 
 }
