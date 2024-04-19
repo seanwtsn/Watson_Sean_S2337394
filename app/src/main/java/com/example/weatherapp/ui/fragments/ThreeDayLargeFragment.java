@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.weatherapp.R;
 import com.example.weatherapp.data.ExtendedWeather;
 import com.example.weatherapp.helpers.GetWindDirectionHelper;
+import com.example.weatherapp.helpers.WeatherIconHelper;
 import com.example.weatherapp.ui.viewmodels.ThreeDayLargeViewModel;
 
 import java.util.ArrayList;
@@ -54,6 +56,7 @@ public class ThreeDayLargeFragment extends Fragment {
         ArrayList<TextView> temperature =  new ArrayList<>();
         ArrayList<TextView> dayText = new ArrayList<>();
         ArrayList<TextView> windDir = new ArrayList<>();
+        ArrayList<ImageView> conditionImage = new ArrayList<>();
 
         Observer<ArrayList<ExtendedWeather>> observer = new Observer<ArrayList<ExtendedWeather>>() {
             @Override
@@ -62,9 +65,18 @@ public class ThreeDayLargeFragment extends Fragment {
 
                 for (int i = 0; i < constraintLayouts.size(); i++) {
 
-                    sb.add(Float.toString((int) getData.get(i).getHighTemperature()).replaceAll("\\.\\d+$", "°C") +
-                            "/" +
-                            Float.toString((int) getData.get(i).getLowTemperature()).replaceAll("\\.\\d+$", "°C"));
+                    if(getData.get(i).getHighTemperature() == Float.NEGATIVE_INFINITY)
+                    {
+                        sb.add("" + Float.toString((int) getData.get(i).getLowTemperature()).replaceAll("\\.\\d+$", "°C"));
+                    }
+                    else
+                    {
+                        sb.add(Float.toString((int) getData.get(i).getHighTemperature()).replaceAll("\\.\\d+$", "°C") +
+                                "/" +
+                                Float.toString((int) getData.get(i).getLowTemperature()).replaceAll("\\.\\d+$", "°C"));
+                    }
+
+
 
                     dt.add(getData.get(i).getDay().toString().substring(0, 1).toUpperCase() +
                             getData.get(i).getDay().toString().substring(1).toLowerCase());
@@ -73,6 +85,7 @@ public class ThreeDayLargeFragment extends Fragment {
                     temperature.add(constraintLayouts.get(i).findViewById(R.id.temperature_text_one));
                     windSpeed.add(constraintLayouts.get(i).findViewById(R.id.wind_speed_text_one));
                     humidity.add(constraintLayouts.get(i).findViewById(R.id.humidity_text_one));
+                    conditionImage.add(constraintLayouts.get(i).findViewById(R.id.condition_icon_one));
 
 
                 }
@@ -83,6 +96,7 @@ public class ThreeDayLargeFragment extends Fragment {
                     windDir.get(j).setText(GetWindDirectionHelper.getWindDir(getData.get(j).getWindDirection()));
                     windSpeed.get(j).setText(String.format("%s mph", Float.toString((int) getData.get(j).getWindSpeed()).split("\\.")[0]));
                     humidity.get(j).setText(Float.toString((int) getData.get(j).getHumidity()).replaceAll("\\.\\d+$", "%"));
+                    conditionImage.get(j).setImageResource(WeatherIconHelper.getWeatherIcon(getData.get(j).getConditions()));
                 }
 
             }
