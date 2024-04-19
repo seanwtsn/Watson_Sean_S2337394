@@ -93,12 +93,30 @@ public class FileRead implements Runnable
                 throw new RuntimeException(e);
             }
 
-            return json;
+            return "{\"locations\":[{\"name\":\"Edinburgh\",\"countryCode\":\"UK\",\"position\":\"55.953251,-3.188267\",\"rssKey\":\"2650225\"}," +
+                    "{\"name\":\"Cardiff\",\"countryCode\":\"UK\",\"position\":\"51.481583,-3.17909\",\"rssKey\":\"2653822\"}," +
+                    "{\"name\":\"Inverness\",\"countryCode\":\"UK\",\"position\":\"57.477772,-4.224721\",\"rssKey\":\"2646088\"}," +
+                    "{\"name\":\"Irvine\",\"countryCode\":\"UK\",\"position\":\"55.6115669,-4.6696364\",\"rssKey\":\"2646032\"}," +
+                    "{\"name\":Glasgow\",\"countryCode\":\"UK\",\"position\":\"55.860916,-4.251433\",\"rssKey\":\"2648579\"}," +
+                    "{\"name\":\"London\",\"countryCode\":\"UK\",\"position\":\"51.509865,-0.118092\",\"rssKey\":\"2643741\"}," +
+                    "{\"name\":\"New York\",\"countryCode\":\"US\",\"position\":\"40.730610, 73.935242\",\"rssKey\":\"5128581\"}," +
+                    "{\"name\":\"Oman\",\"countryCode\":\"UAE\",\"position\":\"23.614328, 58.545284\",\"rssKey\":\"287286\"}," +
+                    "{\"name\":\"Mauritius\",\"countryCode\":\"MA\",\"position\":\"-20.244959, 57.561768\",\"rssKey\":\"934154\"}," +
+                    "{\"name\":\"Bangladesh\",\"countryCode\":\"BD\",\"position\":\"23.777176,  90.399452\",\"rssKey\":\"1185241\"}]}";
         } else
         {
             try {
                 FileWriter fileWriter = new FileWriter(file);
-                fileWriter.write("{\"locations\":[{\"name\":\"Edinburgh\",\"countryCode\":\"UK\",\"position\":\"55.953251,-3.188267\",\"rssKey\":\"2650225\"},{\"name\":\"Irvine\",\"countryCode\":\"UK\",\"position\":\"55.6115669,-4.6696364\",\"rssKey\":\"2646032\"},{\"name\":\"Cardiff\",\"countryCode\":\"UK\",\"position\":\"51.481583,-3.17909\",\"rssKey\":\"2653822\"},{\"name\":\"Edinburgh\",\"countryCode\":\"UK\",\"position\":\"55.953251,-3.188267\",\"rssKey\":\"2650225\"},{\"name\":\"Inverness\",\"countryCode\":\"UK\",\"position\":\"57.477772,-4.224721\",\"rssKey\":\"2646088\"},{\"name\":\"Irvine\",\"countryCode\":\"UK\",\"position\":\"55.6115669,-4.6696364\",\"rssKey\":\"2646032\"}]}");
+                fileWriter.write("{\"locations\":[{\"name\":\"Edinburgh\",\"countryCode\":\"UK\",\"position\":\"55.953251,-3.188267\",\"rssKey\":\"2650225\"}," +
+                        "{\"name\":\"Cardiff\",\"countryCode\":\"UK\",\"position\":\"51.481583,-3.17909\",\"rssKey\":\"2653822\"}," +
+                        "{\"name\":\"Inverness\",\"countryCode\":\"UK\",\"position\":\"57.477772,-4.224721\",\"rssKey\":\"2646088\"}," +
+                        "{\"name\":\"Irvine\",\"countryCode\":\"UK\",\"position\":\"55.6115669,-4.6696364\",\"rssKey\":\"2646032\"}," +
+                        "{\"name\":Glasgow\",\"countryCode\":\"UK\",\"position\":\"55.860916,-4.251433\",\"rssKey\":\"2648579\"}," +
+                    "{\"name\":\"London\",\"countryCode\":\"UK\",\"position\":\"51.509865,-0.118092\",\"rssKey\":\"2643741\"}," +
+                        "{\"name\":\"New York\",\"countryCode\":\"US\",\"position\":\"40.730610, 73.935242\",\"rssKey\":\"5128581\"}," +
+                            "{\"name\":\"Oman\",\"countryCode\":\"UAE\",\"position\":\"23.614328, 58.545284\",\"rssKey\":\"287286\"}," +
+                                "{\"name\":\"Mauritius\",\"countryCode\":\"MA\",\"position\":\"-20.244959, 57.561768\",\"rssKey\":\"934154\"}," +
+                                    "{\"name\":\"Bangladesh\",\"countryCode\":\"BD\",\"position\":\"23.777176,  90.399452\",\"rssKey\":\"1185241\"}]}");
                 fileWriter.flush();
                 fileWriter.close();
 

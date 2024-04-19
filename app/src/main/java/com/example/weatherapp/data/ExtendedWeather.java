@@ -7,7 +7,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 
-public class ExtendedWeather extends BasicWeather {
+public class    ExtendedWeather extends BasicWeather {
 
     //Had to set some of these to nullable because stupidly
     //The one day weather misses out a lot of detail that is

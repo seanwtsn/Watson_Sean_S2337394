@@ -1,6 +1,5 @@
 package com.example.weatherapp.ui.fragments;
 
-import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -18,11 +17,9 @@ import com.example.weatherapp.R;
 import com.example.weatherapp.interfaces.OnLocationSelectedListener;
 import com.example.weatherapp.models.MainModel;
 import com.example.weatherapp.ui.viewmodels.MainFragmentViewModel;
+import com.google.android.gms.common.api.internal.ConnectionCallbacks;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationAvailability;
-import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
 import com.google.android.gms.maps.model.LatLng;
@@ -31,7 +28,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class MainFragment extends Fragment
+public class MainFragment extends Fragment implements ConnectionCallbacks
 {
     private MainFragmentViewModel mainFragmentViewModel;
     private static final int PERMISSION_REQUEST = 123;
@@ -75,33 +72,6 @@ public class MainFragment extends Fragment
         super.onResume();
     }
 
-    private final LocationCallback locationCallback = new LocationCallback()
-    {
-        @Override
-        public void onLocationResult(@NonNull LocationResult locationResult) {
-            super.onLocationResult(locationResult);
-
-            Location location = locationResult.getLocations().get(locationResult.getLocations().size() - 1);
-
-            if (location != null)
-            {
-                currentPos = new LatLng(location.getLatitude(), location.getLongitude());
-            }
-            else
-            {
-                currentPos = new LatLng(51.509865,-0.118092);
-                rss = "2643743";
-            }
-
-        }
-
-        @Override
-        public void onLocationAvailability(@NonNull LocationAvailability locationAvailability) {
-            super.onLocationAvailability(locationAvailability);
-
-        }
-    };
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -115,6 +85,9 @@ public class MainFragment extends Fragment
 
         TextView refreshedTextView = view.findViewById(R.id.last_refresh_text);
 
+        rss = "2648579";
+
+        currentPos = new LatLng(55.858700, -4.295905);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh()
@@ -154,6 +127,8 @@ public class MainFragment extends Fragment
         };
 
         mainFragmentViewModel.getModel().observe(getViewLifecycleOwner(), observer);
+
+
 
         return view;
     }
@@ -199,15 +174,16 @@ public class MainFragment extends Fragment
     }
 
     public void onPause() {
+
         super.onPause();
-        fusedLocationProviderClient.removeLocationUpdates(locationCallback);
     }
 
     @Override
     public void onDestroy()
     {
+
+
         super.onDestroy();
-        fusedLocationProviderClient.removeLocationUpdates(locationCallback);
     }
 
     private String buildRefreshText()
@@ -222,5 +198,15 @@ public class MainFragment extends Fragment
 
 
         return sb.toString();
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
     }
 }

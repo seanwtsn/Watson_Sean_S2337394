@@ -136,6 +136,8 @@ public class MainModel implements WeatherParsedListener, FileReadCallBack {
         oneDayExtended.setConditions(threeDayBasic.get(0).getConditions());
 
 
+        //new Thread(new WeatherWriteLast(threeDayExtended, threeDayBasic, oneDayExtended));
+
         isParsed = true;
 
     }
