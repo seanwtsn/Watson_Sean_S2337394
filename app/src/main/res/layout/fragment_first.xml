@@ -75,4 +75,13 @@
 
         />
 
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="S2337394"
+        app:layout_constraintBottom_toTopOf="@+id/main_location_text"
+        app:layout_constraintEnd_toEndOf="@+id/main_location_text"
+        app:layout_constraintStart_toStartOf="@+id/main_location_text" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
