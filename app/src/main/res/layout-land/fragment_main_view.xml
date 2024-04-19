@@ -9,50 +9,102 @@
     tools:context=".ui.fragments.MainFragment"
     >
 
-<FrameLayout
-    android:id="@+id/frag"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:animateLayoutChanges="true"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintHorizontal_bias="0.4"
-    />
-
-<ScrollView
-android:layout_width="wrap_content"
-android:layout_height="match_parent"
-app:layout_constraintEnd_toEndOf="parent"
-app:layout_constraintTop_toTopOf="parent"
-    >
-
-<LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    app:layout_constraintTop_toTopOf="parent">
-
-
-    <FrameLayout
-        android:id="@+id/frag_two"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:animateLayoutChanges="true"
+        android:layout_height="match_parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <FrameLayout
+                android:id="@+id/frag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:animateLayoutChanges="true"
 
 
-        />
 
-    <FrameLayout
-        android:id="@+id/frag_three"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:animateLayoutChanges="true" />
+                />
 
 
-</LinearLayout>
+            <ScrollView
+                android:id="@+id/scroll"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingBottom="50dp"
 
 
-</ScrollView>
+
+
+                >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginStart="100dp"
+                    >
+
+                    <TextView
+                        android:id="@+id/last_refresh_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="30dp"
+                        android:text="Last Resfreshed: " />
+
+                    <FrameLayout
+                        android:id="@+id/frag_two"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:animateLayoutChanges="true"
+
+
+                        />
+
+                    <FrameLayout
+                        android:id="@+id/frag_grid"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginEnd="10dp"
+
+                        />
+
+                    <FrameLayout
+                        android:id="@+id/frag_three"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:animateLayoutChanges="true" />
+
+
+                    <FrameLayout
+                        android:id="@+id/frag_five"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginEnd="10dp" />
+
+                </LinearLayout>
+
+
+            </ScrollView>
+
+        </LinearLayout>
+
+
+
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -90,7 +90,7 @@ public class ThreeDayLargeFragment extends Fragment {
 
                 }
 
-                for (int j = 0; j < dt.size(); j++) {
+                for (int j = 0; j < 3; j++) {
                     dayText.get(j).setText(dt.get(j));
                     temperature.get(j).setText(sb.get(j));
                     windDir.get(j).setText(GetWindDirectionHelper.getWindDir(getData.get(j).getWindDirection()));
