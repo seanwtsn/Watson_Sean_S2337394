@@ -7,4 +7,13 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="one_day_status">One Day Status</string>
+    <string name="glasgow_rss">2648579</string>
+    <string name="error_weather">Error! Weather Can\'t be Displayed!</string>
+    <string name="Map">Map</string>
+    <string name="today_forecast">Today\'s Forecast</string>
+    <string name="visibility">Visibility</string>
+    <string name="pressure">Pressure</string>
+    <string name="humidity">Humidity</string>
+    <string name="sunset">Sunset</string>
+    <string name="sunrise">Sunrise</string>
 </resources>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_first"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.fragments.FirstFragment"
+    >
+
+    <Button
+        android:id="@+id/main_location_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="28dp"
+
+        android:background="@android:color/transparent"
+        android:drawableLeft="@drawable/icon_folder"
+        android:text="Location"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/locationsCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/main_location_text">
+
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/locationsFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/temperature_one_day_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="32°C"
+        android:textSize="60sp"
+        app:layout_constraintEnd_toEndOf="@+id/main_location_text"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/main_location_text"
+        app:layout_constraintTop_toBottomOf="@+id/locationsCard" />
+
+    <TextView
+        android:id="@+id/main_conditions_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="Cloudy With Showers"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="@+id/temperature_one_day_text"
+        app:layout_constraintTop_toBottomOf="@+id/temperature_one_day_text" />
+
+    <ImageView
+        android:id="@+id/conditions_image"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginStart="30dp"
+        android:src="@drawable/cloud_heavy_rain"
+        app:layout_constraintBottom_toBottomOf="@+id/temperature_one_day_text"
+        app:layout_constraintStart_toEndOf="@+id/temperature_one_day_text"
+        app:layout_constraintTop_toTopOf="@+id/temperature_one_day_text"
+
+
+        />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="S2337394"
+        app:layout_constraintBottom_toTopOf="@+id/main_location_text"
+        app:layout_constraintEnd_toEndOf="@+id/main_location_text"
+        app:layout_constraintStart_toStartOf="@+id/main_location_text" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

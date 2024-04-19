@@ -1,42 +1,54 @@
 package com.example.weatherapp;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentContainerView;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.example.weatherapp.databinding.ActivityMainBinding;
+import com.example.weatherapp.ui.fragments.MainFragment;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 
 public class MainActivity extends AppCompatActivity {
-
-    private ActivityMainBinding binding;
-    private MainViewModel viewModel;
-    private FragmentContainerView fragmentContainerView;
-
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
+
+        setFragment(MainFragment.newInstance());
+
+        com.example.weatherapp.databinding.ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
+
         setContentView(binding.getRoot());
-        viewModel = new ViewModelProvider(this).get(MainViewModel.class);
-        setContentView(R.layout.activity_main);
-        fragmentContainerView = binding.fragmentContainerView;
-        setFragmentContainerView(new ThreeDaySmallFragment());
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav);
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                if (item.getItemId() == R.id.navigation_home)
+                {
+                    setFragment(MainFragment.newInstance());
+                }
+                else
+                {
+                    setFragment(MapsFragment.newInstance());
+                }
+
+                return true;
+            }
+        }
+        );
+
     }
 
-    public void onStart() {
-        super.onStart();
-
-
-    }
-    private void setFragmentContainerView(Fragment fragment)
+    private void setFragment(Fragment fragment)
     {
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerView, fragment).commit();
-    }
+        getSupportFragmentManager().beginTransaction().replace(R.id.absolute_main_container, fragment).commit();
 
+        getSupportFragmentManager().executePendingTransactions();
+    }
 
 
 

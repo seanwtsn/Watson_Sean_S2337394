@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/frameLayout2"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.fragments.OneDayGridFragment">
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="2"
+        android:orientation="vertical"
+        android:rowCount="3"
+        android:alignmentMode="alignBounds"
+        android:rowOrderPreserved="false"
+        android:useDefaultMargins="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+
+
+        <LinearLayout
+            android:layout_width="150dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="25dp"
+            android:orientation="vertical"
+            android:background="@drawable/background_box"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:text="@string/visibility"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="6dp"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:id="@+id/visibility_text"
+
+                android:text="Excellent"
+                android:drawableLeft="@drawable/icon_visibility_raster"
+                />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="150dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical"
+            android:background="@drawable/background_box"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:text="@string/pressure"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="6dp"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:drawableLeft="@drawable/icon_pressure_raster"
+                android:text="1010mb"
+                android:id="@+id/pressure_text"
+                />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="150dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="10dp"
+
+            android:orientation="vertical"
+            android:background="@drawable/background_box"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:text="@string/humidity"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="6dp"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:drawableLeft="@drawable/icon_humidity"
+                android:text="75%"
+                android:id="@+id/humidity_text"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="150dp"
+            android:layout_height="80dp"
+            android:orientation="vertical"
+            android:background="@drawable/background_box"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:text="UV Risk"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="6dp"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:drawableLeft="@drawable/icon_uv"
+                android:padding="4dp"
+                android:text=" 1 "
+                android:id="@+id/uvrisk_text"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="150dp"
+            android:layout_height="80dp"
+            android:orientation="vertical"
+            android:background="@drawable/background_box"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:text="@string/sunrise"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginEnd="6dp"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:drawableLeft="@drawable/icon_sunrise_raster"
+                android:text=" 12:00PM"
+                android:id="@+id/sunrise_text"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="150dp"
+            android:layout_height="80dp"
+            android:orientation="vertical"
+            android:background="@drawable/background_box"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:text="@string/sunset"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginEnd="6dp"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:drawableLeft="@drawable/icon_sunset_raster"
+
+                android:text=" 12:00PM"
+                android:id="@+id/sunset_text"
+                />
+
+        </LinearLayout>
+
+    </GridLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

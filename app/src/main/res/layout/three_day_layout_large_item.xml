@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/merge"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:showIn="@layout/fragment_three_day_large">
+
+
+    <TextView
+        android:id="@+id/day_one_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Day"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:paddingStart="12dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/condition_icon_one"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/icon_sun_norays"
+        app:layout_constraintEnd_toStartOf="@+id/temperature_icon_one"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <ImageView
+        android:id="@+id/imageView7"
+        android:layout_width="27dp"
+        android:layout_height="27dp"
+        android:layout_marginStart="20dp"
+        android:src="@drawable/icon_uv"
+        app:layout_constraintBottom_toBottomOf="@+id/wind_dir_text_one"
+        app:layout_constraintStart_toEndOf="@+id/wind_dir_text_one" />
+
+    <TextView
+        android:id="@+id/wind_speed_text_one"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="14 mph"
+
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/wind_speed_icon_one"
+        app:layout_constraintStart_toEndOf="@+id/wind_speed_icon_one"
+        tools:layout_conversion_absoluteHeight="27dp"
+        tools:layout_conversion_absoluteWidth="75dp" />
+
+    <ImageView
+        android:id="@+id/wind_speed_icon_one"
+        android:layout_width="27dp"
+        android:layout_height="27dp"
+        android:layout_marginStart="16dp"
+        android:src="@drawable/icon_wind"
+        app:layout_constraintBottom_toBottomOf="@+id/condition_icon_one"
+
+        app:layout_constraintStart_toEndOf="@+id/condition_icon_one" />
+
+    <TextView
+        android:id="@+id/uv_text_one"
+        android:layout_width="40dp"
+        android:layout_height="27dp"
+        android:layout_marginStart="8dp"
+        android:text="80%"
+        android:textColor="@color/white"
+
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView7"
+        app:layout_constraintStart_toEndOf="@+id/imageView7" />
+
+    <TextView
+        android:id="@+id/temperature_text_one"
+        android:layout_width="98dp"
+        android:layout_height="27dp"
+        android:layout_marginEnd="184dp"
+        android:text="Text"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/temperature_icon_one"
+        app:layout_constraintTop_toTopOf="@+id/temperature_icon_one" />
+
+    <TextView
+        android:id="@+id/humidity_text_one"
+        android:layout_width="40dp"
+        android:layout_height="27dp"
+        android:layout_marginStart="8dp"
+        android:text="80%"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@+id/imageView6"
+        app:layout_constraintTop_toTopOf="@+id/imageView6"
+        tools:layout_conversion_absoluteHeight="27dp"
+        tools:layout_conversion_absoluteWidth="40dp" />
+
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="27dp"
+        android:layout_height="27dp"
+        android:layout_marginStart="24dp"
+        android:src="@drawable/icon_humidity"
+        app:layout_constraintStart_toEndOf="@+id/temperature_text_one"
+        app:layout_constraintTop_toTopOf="@+id/temperature_text_one" />
+
+    <TextView
+        android:id="@+id/wind_dir_text_one"
+        android:layout_width="wrap_content"
+        android:layout_height="27dp"
+
+        android:layout_marginStart="8dp"
+        android:text="NW"
+
+        android:textColor="@color/white"
+
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView5"
+        app:layout_constraintStart_toEndOf="@+id/imageView5" />
+
+    <ImageView
+        android:id="@+id/temperature_icon_one"
+        android:layout_width="27dp"
+        android:layout_height="27dp"
+        android:layout_marginEnd="8dp"
+
+        android:importantForAccessibility="no"
+        android:src="@drawable/icon_thermometer"
+        app:layout_constraintEnd_toStartOf="@+id/temperature_text_one"
+        app:layout_constraintStart_toEndOf="@+id/condition_icon_one"
+        app:layout_constraintTop_toTopOf="@+id/condition_icon_one" />
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="27dp"
+        android:layout_height="27dp"
+
+        android:layout_marginStart="16dp"
+
+        android:src="@drawable/icon_direction"
+        app:layout_constraintBottom_toBottomOf="@+id/wind_speed_text_one"
+        app:layout_constraintStart_toEndOf="@+id/wind_speed_text_one" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
